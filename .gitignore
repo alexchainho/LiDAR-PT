@@ -15,7 +15,7 @@ env/
 ENV/
 
 # Configuration files with sensitive data
-caminhos.json
+config/caminhos.json
 
 # IDE
 .vscode/
