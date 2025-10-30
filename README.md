@@ -167,28 +167,33 @@ O script `Executar_DGT.bat` irá automaticamente:
                │
                ▼
 ┌─────────────────────────────────────────┐
-│  3. Escolher Método                     │
-│     • Processo por Buffer               │
-└──────────────┬──────────────────────────┘
-               │
-               ▼
-┌─────────────────────────────────────────┐
-│  4. Definir Área                        │
-│     • Mapa interativo                   │
+│  3. Definir Área                        │
+│     OPÇÃO A: Mapa interativo (direto)   │
 │     • Clique para coordenadas           │
+│     • Navegação com drag & zoom         │
+│                                         │
+│     OPÇÃO B: Processo por Buffer        │
+│     • Clicar no botão "Processo Buffer" │
+│     • Inserir coordenadas manualmente   │
 └──────────────┬──────────────────────────┘
                │
                ▼
 ┌─────────────────────────────────────────┐
-│  5. Configurar Buffer                   │
+│  4. Configurar Buffer                   │
 │     • 100m a 15km                       │
 │     • Merge opcional (Sim/Não)          │
 └──────────────┬──────────────────────────┘
                │
                ▼
 ┌─────────────────────────────────────────┐
-│  6. Selecionar Pasta de Destino        │
+│  5. Selecionar Pasta de Destino         │
 │     • Diálogo de seleção                │
+└──────────────┬──────────────────────────┘
+               │
+               ▼
+┌─────────────────────────────────────────┐
+│  6. Nome do Projeto                     │
+│     • Digite o nome identificador       │
 └──────────────┬──────────────────────────┘
                │
                ▼
@@ -212,9 +217,10 @@ O script `Executar_DGT.bat` irá automaticamente:
 
 **Cenário**: Descarregar MDS-50cm e LAZ para zona de Lisboa com buffer de 2km e merge ativado
 
+**Via Mapa Interativo (Recomendado):**
 1. Execute `Executar_DGT.bat`
 2. Selecione: ☑ MDS-50cm, ☑ LAZ
-3. Clique em **"Processo por Buffer"**
+3. Clique em **"Selecionar Coordenadas no Mapa"**
 4. No mapa, clique em Lisboa (aprox. 38.7°N, 9.1°W)
 5. Digite buffer: `2` (= 2 km)
 6. Diálogo merge: **Sim**
@@ -224,6 +230,10 @@ O script `Executar_DGT.bat` irá automaticamente:
 10. ✅ Ficheiros criados:
     - `Lisboa_2km/MDS-50cm/MDS-50cm.tif` (merged)
     - `Lisboa_2km/LAZ/*.laz` (individuais)
+
+**Alternativa - Via Botão "Processo por Buffer":**
+- Útil se preferir inserir coordenadas manualmente
+- Mesmo fluxo, mas sem interação com o mapa
 
 ---
 
