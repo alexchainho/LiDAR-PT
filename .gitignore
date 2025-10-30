@@ -1,0 +1,42 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+*.egg-info/
+dist/
+build/
+
+# Virtual Environment
+dgt_venv/
+venv/
+env/
+ENV/
+
+# Configuration files with sensitive data
+caminhos.json
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Data files (optional - uncomment if you don't want to track large data)
+# *.tif
+# *.laz
+# *.las
+# *.shp
+# *.shx
+# *.dbf
+# *.prj
+# *.cpg
+
+# Output directories
+localidades/

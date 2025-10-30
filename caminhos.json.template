@@ -1,16 +1,15 @@
 {
   "venv_path": "d:\\CSTE\\DGT_Rasters\\dgt_venv",
   "credentials": {
-    "username": "chainho.ac@gnr.pt",
-    "password": "G_nr2050086"
+    "username": "SEU_EMAIL@AQUI.PT",
+    "password": "SUA_PASSWORD_AQUI"
   },
   "paths": {
     "base_path_tos": "D:\\OneDrive - RNSI\\CSTE_2050086_CHAINHO\\C-CSTE\\E-TOs\\2025",
     "csv_ocorrencias": "D:\\OneDrive - RNSI\\CSTE_2050086_CHAINHO\\C-CSTE\\J-IR-2025\\ocorrencias_anepc.csv",
     "censos_shapefile": "D:\\CSTE\\DGT_Rasters\\dados\\Lugares_2021.shp",
     "grelha_dgt": "D:\\CSTE\\DGT_Rasters\\dados\\grelha_dgt.shp",
-    "localidades_base": "D:\\CSTE\\DGT_Rasters\\localidades",
-    "portugal_shapefile": "D:\\CSTE\\DGT_Rasters\\dados\\PORTUGAL.shp"
+    "localidades_base": "D:\\CSTE\\DGT_Rasters\\localidades"
   },
   "urls": {
     "stac_search": "https://cdd.dgterritorio.gov.pt/dgt-be/v1/search",

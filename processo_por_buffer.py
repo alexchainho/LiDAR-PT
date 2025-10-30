@@ -1,10 +1,13 @@
 # Este ficheiro foi renomeado para processo_por_buffer.py conforme solicitado.
 # O conteúdo original deve ser transferido para o novo ficheiro se necessário.
 import os
-os.environ['PROJ_LIB'] = r"C:\Users\UEPS_AC\AppData\Local\Programs\Python\Python313\Lib\site-packages\pyproj\proj_dir\share\proj"
+import config_loader
+
+# Carregar configurações
+CONFIG = config_loader.load_config()
+
 import math
 import requests
-import os
 import json
 import time
 import sys
@@ -22,10 +25,11 @@ from shapely.geometry import Point
 import pandas as pd
 
 # Global state for session management
+username, password = config_loader.get_credentials()
 auth_state = {
     "session": None,
-    "username": 'chainho.ac@gnr.pt',
-    "password": 'G_nr2050086',
+    "username": username,
+    "password": password,
     "last_auth_time": 0,
     "download_counter": 0,
 }
@@ -80,11 +84,12 @@ def authenticate(username, password):
     Authenticates with DGT using username and password and updates the global state.
     """
     # Constants for authentication
-    auth_base_url = "https://auth.cdd.dgterritorio.gov.pt/realms/dgterritorio/protocol/openid-connect"
-    redirect_uri = "https://cdd.dgterritorio.gov.pt/auth/callback"
+    urls = config_loader.get_all_urls()
+    auth_base_url = urls['auth_base']
+    redirect_uri = urls['redirect_uri']
     client_id = "aai-oidc-dgt"
-    main_site = "https://cdd.dgterritorio.gov.pt"
-    stac_url = "https://cdd.dgterritorio.gov.pt/dgt-be/v1/search"
+    main_site = urls['main_site']
+    stac_url = urls['stac_search']
     
     headers = {
         "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36",
@@ -478,7 +483,7 @@ def query_database(sado_input):
     """
     Pesquisa o número SADO no CSV e devolve Localidade, Concelho, Latitude, Longitude.
     """
-    csv_path = r"D:\OneDrive - RNSI\CSTE_2050086_CHAINHO\C-CSTE\J-IR-2025\ocorrencias_anepc.csv"
+    csv_path = config_loader.get_path('csv_ocorrencias')
     try:
         df = pd.read_csv(csv_path, dtype=str)
         # Tenta encontrar o SADO na coluna 'Numero' (ajuste se o nome da coluna for diferente)
@@ -499,8 +504,19 @@ def query_database(sado_input):
         return None
 
 def create_folder(sado_number, localidade, concelho):
-    """Create folder with compiled name in the fixed base path."""
-    base_path = r"D:\OneDrive - RNSI\CSTE_2050086_CHAINHO\C-CSTE\E-TOs\2025"
+    """Create folder with compiled name. Uses tkinter to select base path if not provided."""
+    # Pedir ao utilizador para selecionar a pasta de output
+    root = tk.Tk()
+    root.withdraw()
+    base_path = filedialog.askdirectory(
+        title="Selecione a pasta base para o projeto",
+        initialdir=config_loader.get_path('base_path_tos')
+    )
+    root.destroy()
+    
+    if not base_path:
+        print("Nenhuma pasta selecionada. Usando pasta padrão.")
+        base_path = config_loader.get_path('base_path_tos')
 
     # Clean strings for folder name (remove invalid characters)
     clean_sado = str(sado_number).replace('/', '_').replace('\\', '_').replace(':', '_').replace('*', '_').replace('?', '_').replace('"', '_').replace('<', '_').replace('>', '_').replace('|', '_')
@@ -701,10 +717,9 @@ def main_popup_and_shapefile():
     bbox = list(gdf.to_crs(epsg=4326).total_bounds)  # [minx, miny, maxx, maxy] em WGS84
 
     # --- Continua o fluxo normal do downloader ---
-    username = "chainho.ac@gnr.pt"
-    password = "G_nr2050086"
-    delay = 5.0
-    STAC_SEARCH_URL = "https://cdd.dgterritorio.gov.pt/dgt-be/v1/search"
+    username, password = config_loader.get_credentials()
+    delay = config_loader.get_setting('download_delay')
+    STAC_SEARCH_URL = config_loader.get_url('stac_search')
 
     print("\n--- DGT CDD Downloader (Modo Coordenadas/SADO) ---")
     print(f"ID: {nome_id}")

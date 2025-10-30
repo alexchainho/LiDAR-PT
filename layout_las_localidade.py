@@ -1,4 +1,5 @@
 import os
+import config_loader
 import laspy
 import numpy as np
 import matplotlib.pyplot as plt
@@ -6,7 +7,7 @@ from mpl_toolkits.mplot3d import Axes3D
 
 # --- Configurações ---
 # Pasta onde estão os ficheiros LAS (ajustar se necessário)
-PASTA_LAS = r"D:\CSTE\DGT_Rasters\localidades"
+PASTA_LAS = config_loader.get_path('localidades_base')
 # Nome da localidade (pode ser passado como argumento ou detetado automaticamente)
 NOME_LOCALIDADE = None  # Se None, deteta automaticamente a primeira subpasta
 

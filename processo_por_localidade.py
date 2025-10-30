@@ -1,5 +1,9 @@
 import os
-os.environ['PROJ_LIB'] = r"C:\Users\UEPS_AC\AppData\Local\Programs\Python\Python313\Lib\site-packages\pyproj\proj_dir\share\proj"
+import config_loader
+
+# Carregar configurações
+CONFIG = config_loader.load_config()
+
 import tkinter as tk
 from tkinter import simpledialog, messagebox
 import geopandas as gpd
@@ -17,7 +21,7 @@ import rasterio
 from rasterio.merge import merge
 
 # Caminho para a camada censos
-CENSOS_PATH = r"D:\CSTE\DGT_Rasters\dados\Lugares_2021.shp"
+CENSOS_PATH = config_loader.get_path('censos_shapefile')
 
 # Função para criar pasta do projeto
 
@@ -71,8 +75,20 @@ def processo_por_localidade():
     nome_localidade = poligono['LUG21DESIG']
 
 
-    # Pasta base do projeto (ajustar conforme necessário)
-    base_path = r"D:\CSTE\DGT_Rasters"
+    # Pasta base do projeto - pedir ao utilizador
+    root2 = tk.Tk()
+    root2.withdraw()
+    from tkinter import filedialog
+    base_path = filedialog.askdirectory(
+        title="Selecione a pasta base para o projeto",
+        initialdir=config_loader.get_path('localidades_base')
+    )
+    root2.destroy()
+    
+    if not base_path:
+        print("Nenhuma pasta selecionada. Usando pasta padrão.")
+        base_path = os.path.dirname(config_loader.get_path('localidades_base'))
+    
     pasta_localidade = criar_pasta_localidade(nome_localidade, base_path)
     shp_path = os.path.join(pasta_localidade, f"{nome_localidade}.shp")
     # Exportar shapefile no SRC 3763 (sem passar 'crs')
@@ -90,10 +106,11 @@ def processo_por_localidade():
     # --- Processo de download DGT ---
     # Funções essenciais do downloader (copiadas de dgt_cdd_downloader.py)
     # (Para manter independente, não faz import cruzado)
+    username, password = config_loader.get_credentials()
     auth_state = {
         "session": None,
-        "username": 'chainho.ac@gnr.pt',
-        "password": 'G_nr2050086',
+        "username": username,
+        "password": password,
         "last_auth_time": 0,
         "download_counter": 0,
     }
@@ -129,11 +146,12 @@ def processo_por_localidade():
         except Exception:
             return False
     def authenticate(username, password):
-        auth_base_url = "https://auth.cdd.dgterritorio.gov.pt/realms/dgterritorio/protocol/openid-connect"
-        redirect_uri = "https://cdd.dgterritorio.gov.pt/auth/callback"
+        urls = config_loader.get_all_urls()
+        auth_base_url = urls['auth_base']
+        redirect_uri = urls['redirect_uri']
         client_id = "aai-oidc-dgt"
-        main_site = "https://cdd.dgterritorio.gov.pt"
-        stac_url = "https://cdd.dgterritorio.gov.pt/dgt-be/v1/search"
+        main_site = urls['main_site']
+        stac_url = urls['stac_search']
         headers = {
             "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64)",
             "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8",
@@ -290,7 +308,7 @@ def processo_por_localidade():
             print(f"Erro ao obter coleções: {e}")
             return None
     def main_download(bbox, output_dir, delay=5.0):
-        STAC_SEARCH_URL = "https://cdd.dgterritorio.gov.pt/dgt-be/v1/search"
+        STAC_SEARCH_URL = config_loader.get_url('stac_search')
         username = auth_state["username"]
         password = auth_state["password"]
         if not authenticate(username, password):
