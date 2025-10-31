@@ -771,12 +771,6 @@ Contribuições são bem-vindas! Para contribuir:
 
 ---
 
-## 📄 Licença
-
-Este projeto está licenciado sob a **MIT License** - veja o ficheiro [LICENSE](LICENSE) para detalhes.
-
----
-
 ## 👨‍💻 Autor
 
 **Alexandre Chainho**
