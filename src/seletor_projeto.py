@@ -7,6 +7,12 @@ import config_loader
 import webbrowser
 import sys
 
+# Configurar encoding UTF-8 para o stdout no Windows
+if sys.platform == 'win32':
+    import io
+    sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding='utf-8', errors='replace')
+    sys.stderr = io.TextIOWrapper(sys.stderr.buffer, encoding='utf-8', errors='replace')
+
 # Função para validar e solicitar credenciais se necessário
 def validar_credenciais():
     """
@@ -574,7 +580,8 @@ def open_map_picker(parent=None, produtos_vars=None):
         
         # Preparar argumentos para processo_por_buffer.py
         script_path = os.path.join(os.path.dirname(__file__), 'processo_por_buffer.py')
-        args = ['python', script_path]
+        python_path = sys.executable  # Usa o mesmo Python que está a executar este script
+        args = [python_path, script_path]
         
         # Passar produtos selecionados
         if produtos_vars:
@@ -648,7 +655,8 @@ def selecionar_processo():
 
     def abrir_buffer():
         script_path = os.path.join(os.path.dirname(__file__), 'processo_por_buffer.py')
-        args = ['python', script_path]
+        python_path = sys.executable  # Usa o mesmo Python que está a executar este script
+        args = [python_path, script_path]
         
         # Passar produtos selecionados como argumentos
         selecionados = []

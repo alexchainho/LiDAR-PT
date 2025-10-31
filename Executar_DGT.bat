@@ -4,6 +4,9 @@ REM  DGT Rasters - Launcher Script
 REM  Projeto criado com apoio de GitHub Copilot AI
 REM ============================================================================
 
+REM Configurar codepage UTF-8 para suportar caracteres Unicode
+chcp 65001 >nul 2>&1
+
 echo.
 echo ========================================================================
 echo   DGT RASTERS - Sistema de Download de Dados Geoespaciais
@@ -122,7 +125,7 @@ echo   A iniciar interface grafica...
 echo ========================================================================
 echo.
 
-python src\seletor_projeto.py
+dgt_venv\Scripts\python.exe src\seletor_projeto.py
 
 if errorlevel 1 (
     echo.

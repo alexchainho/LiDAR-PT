@@ -1,6 +1,14 @@
 # Este ficheiro foi renomeado para processo_por_buffer.py conforme solicitado.
 # O conteúdo original deve ser transferido para o novo ficheiro se necessário.
 import os
+import sys
+
+# Configurar encoding UTF-8 para o stdout no Windows
+if sys.platform == 'win32':
+    import io
+    sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding='utf-8', errors='replace')
+    sys.stderr = io.TextIOWrapper(sys.stderr.buffer, encoding='utf-8', errors='replace')
+
 import config_loader
 
 # Carregar configurações
