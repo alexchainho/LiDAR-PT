@@ -3,32 +3,29 @@
 # Projeto criado com apoio de GitHub Copilot AI
 # ============================================================================
 
-# Geospatial Core
-geopandas>=1.0.0
+# Geospatial Core (ordem de instalação importante)
+numpy>=1.24.0
+pandas>=2.0.0
 shapely>=2.0.0
+pyshp>=3.0.0
 fiona>=1.9.0
 pyproj>=3.7.0
+geopandas>=1.0.0
 rasterio>=1.4.0
-pyshp >=3.0.0
 
-# Data Processing
-pandas>=2.0.0
-numpy>=1.24.0
+# LiDAR Processing
+laspy>=2.6.0
 
 # HTTP & API
 requests>=2.32.0
 beautifulsoup4>=4.14.0
 
 # GUI
+pillow>=12.0.0
 tkintermapview>=1.29
 customtkinter>=5.2.0
-pillow>=12.0.0
-
-# LiDAR Processing
-laspy>=2.6.0
 
 # Utilities
-pyshp>=3.0.0
 pyperclip>=1.11.0
 
 # Windows Support

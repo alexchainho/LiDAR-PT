@@ -60,12 +60,18 @@ echo.
 
 REM Instalar/atualizar dependências
 echo [SETUP] A verificar dependencias...
-pip install --upgrade pip -q
-pip install -r requirements.txt -q
+echo.
+pip install --upgrade pip
+echo.
+pip install -r requirements.txt
 
 if errorlevel 1 (
-    echo [AVISO] Algumas dependencias podem nao ter sido instaladas
     echo.
+    echo [ERRO] Falha ao instalar algumas dependencias!
+    echo Por favor, verifique os erros acima e tente novamente.
+    echo.
+    pause
+    exit /b 1
 )
 
 echo [OK] Dependencias verificadas
