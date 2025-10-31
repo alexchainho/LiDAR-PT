@@ -14,6 +14,8 @@
 - [Funcionalidades](#-funcionalidades)
 - [Requisitos](#-requisitos)
 - [Instalação](#-instalação)
+  - [Assistente de Configuração Automática](#-primeira-execução---assistente-de-configuração-automática)
+  - [FAQ - Perguntas Frequentes](#-perguntas-frequentes-faq---assistente-de-configuração)
 - [Utilização](#-utilização)
 - [Estrutura do Projeto](#-estrutura-do-projeto)
 - [Configuração](#-configuração)
@@ -40,16 +42,30 @@ Facilitar o acesso a dados de alta qualidade para profissionais de GIS, investig
 ### Características
 
 - ✅ **Interface Gráfica Intuitiva** - Seleção visual com mapa interativo
+- ✅ **Assistente de Configuração** - Setup automático na primeira execução com popups gráficos
 - ✅ **Download Automático** - Gestão de sessões e retry automático
 - ✅ **Buffer Flexível** - De 100 metros a 15 km com deteção inteligente
 - ✅ **Merge Opcional** - União automática de rasters numa única imagem
 - ✅ **GeoPackage** - Formato moderno e portável para dados vetoriais
 - ✅ **Configuração Centralizada** - Ficheiro JSON para credenciais e caminhos
 - ✅ **Caminhos Relativos** - Projeto 100% portável
+- ✅ **Zero Configuração Manual** - Credenciais solicitadas automaticamente via popup
 
 ---
 
 ## 🚀 Funcionalidades
+
+### 0. Assistente de Configuração Automática (Primeira Execução)
+- **Janela popup de boas-vindas** com explicação dos passos de instalação
+- **Criação automática** do ambiente virtual Python (`dgt_venv`)
+- **Instalação automática** de todas as dependências necessárias
+- **Janela popup de credenciais** com:
+  - Campos para username (email) e password
+  - Informações detalhadas sobre o Centro de Descargas da DGT
+  - Link direto e clicável para criar conta: [cdd.dgterritorio.gov.pt/dgt-fe](https://cdd.dgterritorio.gov.pt/dgt-fe)
+  - Validação de campos obrigatórios
+- **Criação automática** do ficheiro `config\caminhos.json` com credenciais
+- **Zero configuração manual** necessária
 
 ### 1. Seleção Interativa de Produtos
 - Interface gráfica com checkboxes para escolher produtos
@@ -109,19 +125,171 @@ Facilitar o acesso a dados de alta qualidade para profissionais de GIS, investig
    cd DGT_Rasters
    ```
 
-2. **Configure as credenciais**
-   - Copie `config\caminhos.json.template` para `config\caminhos.json`
-   - Edite `config\caminhos.json` com suas credenciais DGT
-
-3. **Execute o launcher**
+2. **Execute o launcher**
    ```cmd
    Executar_DGT.bat
    ```
 
-O script `Executar_DGT.bat` irá automaticamente:
-- ✅ Criar o virtual environment (`dgt_venv`)
-- ✅ Instalar todas as dependências
-- ✅ Iniciar a aplicação
+#### 🎯 Primeira Execução - Assistente de Configuração Automática
+
+Na **primeira execução**, o sistema detecta automaticamente a ausência do ambiente virtual e do ficheiro de configuração, apresentando um **assistente gráfico interativo** com janelas popup:
+
+##### 🪟 Passo 1: Janela de Boas-Vindas
+Uma janela gráfica (650x500px) é apresentada com:
+- **Explicação detalhada** dos 4 passos da instalação
+- **Requisitos do sistema** (Python 3.8+, Internet, Espaço em disco)
+- **Tempo estimado** de configuração: 5-10 minutos
+- **Botões de ação:** [Continuar] para prosseguir ou [Cancelar] para sair
+
+##### 🐍 Passo 2: Criação do Ambiente Virtual
+Após clicar em "Continuar", o sistema automaticamente:
+- Cria o virtual environment `dgt_venv`
+- Isola todas as dependências do projeto
+- Evita conflitos com outros projetos Python
+
+##### 📚 Passo 3: Instalação de Dependências
+Instalação automática de todas as bibliotecas necessárias:
+- **Geoespacial:** GeoPandas, Rasterio, Fiona, Shapely
+- **Interface:** Tkinter, Pillow
+- **HTTP:** Requests, urllib3
+- **Processamento:** NumPy, GDAL, laspy
+- Processo pode demorar 3-5 minutos (dependendo da conexão)
+
+##### 🔐 Passo 4: Configuração de Credenciais DGT
+Uma segunda janela popup (650x620px) é apresentada solicitando:
+- **Username (Email):** Campo de texto para o email de registo
+- **Password:** Campo mascarado (asteriscos) para a password
+- **Informações detalhadas:**
+  - Explicação sobre o Centro de Descargas de Dados da DGT
+  - Instruções passo-a-passo para criar conta nova
+  - Link clicável para registo: [https://cdd.dgterritorio.gov.pt/dgt-fe](https://cdd.dgterritorio.gov.pt/dgt-fe)
+- **Validação:** Campos obrigatórios (aviso se deixados vazios)
+- **Segurança:** Credenciais guardadas localmente em `config\caminhos.json`
+- **Botões:** [Guardar] para confirmar ou [Cancelar] para sair
+
+##### 🚀 Passo 5: Inicialização da Aplicação
+Após guardar as credenciais:
+- Ficheiro `config\caminhos.json` é criado e populado
+- Aplicação inicia automaticamente
+- Interface gráfica com mapa interativo é apresentada
+
+---
+
+> **📌 Importante:** 
+> - Nas **execuções seguintes**, o launcher apenas verifica dependências e inicia a aplicação diretamente
+> - **Não são mostrados popups** após a primeira configuração
+> - Para reconfigurar credenciais, edite manualmente `config\caminhos.json`
+
+> **⚠️ Nota de Segurança:**
+> - As credenciais são guardadas **localmente** no seu computador
+> - **Não são partilhadas** ou enviadas para outros serviços
+> - São usadas **apenas** para autenticação no servidor da DGT
+
+
+---
+
+#### ✨ Funcionalidades do `Executar_DGT.bat`
+
+O launcher automatizado realiza as seguintes tarefas:
+
+**Detecção Inteligente:**
+- ✅ Detecta automaticamente se é primeira execução
+- ✅ Verifica existência do virtual environment (`dgt_venv`)
+- ✅ Verifica existência do ficheiro de configuração (`config\caminhos.json`)
+
+**Primeira Execução:**
+- ✅ Mostra **popup de boas-vindas** com instruções detalhadas
+- ✅ Cria automaticamente o virtual environment Python
+- ✅ Ativa o ambiente virtual
+- ✅ Atualiza pip para versão mais recente
+- ✅ Instala todas as dependências do `requirements.txt`
+- ✅ Mostra **popup de credenciais DGT** com link para registo
+- ✅ Cria e popula `config\caminhos.json` com credenciais fornecidas
+- ✅ Inicia a aplicação automaticamente
+
+**Execuções Seguintes:**
+- ✅ Ativa o virtual environment
+- ✅ Verifica e atualiza dependências (se necessário)
+- ✅ Valida existência de `config\caminhos.json`
+- ✅ Inicia a aplicação diretamente (sem popups)
+
+**Tratamento de Erros:**
+- ⚠️ Mensagens claras em caso de falha
+- ⚠️ Instruções de resolução de problemas
+- ⚠️ Opção de cancelamento seguro em qualquer etapa
+
+---
+
+#### 📸 Capturas de Ecrã do Assistente
+
+<details>
+<summary>🖼️ Clique para ver as janelas do assistente de configuração</summary>
+
+**Janela 1: Boas-Vindas**
+```
+┌────────────────────────────────────────────────────────────┐
+│ DGT Rasters - Sistema de Download de Dados Geoespaciais   │
+├────────────────────────────────────────────────────────────┤
+│                                                            │
+│ ═══════════════════════════════════════════════════════   │
+│      PRIMEIRA EXECUCAO DETECTADA!                          │
+│ ═══════════════════════════════════════════════════════   │
+│                                                            │
+│ PASSOS DA INSTALACAO:                                      │
+│                                                            │
+│  1. CRIAR AMBIENTE VIRTUAL PYTHON (dgt_venv)              │
+│     * Isola as dependencias do projeto                    │
+│     * Evita conflitos com outros projetos Python          │
+│                                                            │
+│  2. INSTALAR DEPENDENCIAS NECESSARIAS                     │
+│     * GeoPandas, Rasterio, Tkinter e outras bibliotecas   │
+│     * Pode demorar 3-5 minutos                            │
+│                                                            │
+│  3. CONFIGURAR CREDENCIAIS DGT                            │
+│     * Username e password para acesso aos dados           │
+│                                                            │
+│  4. INICIAR APLICACAO                                     │
+│     * Interface grafica com mapa interativo               │
+│                                                            │
+│ TEMPO ESTIMADO: 5-10 minutos                              │
+│                                                            │
+│                            [Continuar]  [Cancelar]        │
+└────────────────────────────────────────────────────────────┘
+```
+
+**Janela 2: Credenciais DGT**
+```
+┌────────────────────────────────────────────────────────────┐
+│ Configuracao de Credenciais de Acesso                     │
+├────────────────────────────────────────────────────────────┤
+│                                                            │
+│ ACESSO AO CENTRO DE DESCARGAS DE DADOS DA DGT             │
+│                                                            │
+│ Para descarregar dados geograficos da DGT, e necessario   │
+│ ter credenciais de acesso ao Centro de Descargas.         │
+│                                                            │
+│ NAO TEM CONTA? SIGA ESTES PASSOS:                         │
+│   1. Aceda: https://cdd.dgterritorio.gov.pt/dgt-fe        │
+│   2. Clique em "Registar" ou "Criar Conta Nova"           │
+│   3. Preencha o formulario de registo                     │
+│   4. Aguarde email de confirmacao                         │
+│   5. Apos ativacao, utilize credenciais abaixo            │
+│                                                            │
+├────────────────────────────────────────────────────────────┤
+│                                                            │
+│ Username (Email):  [________________________________]      │
+│                                                            │
+│ Password:          [********************************]      │
+│                                                            │
+│ Nao tem conta? Clique aqui para criar registo no CDD      │
+│                                                            │
+│                            [Guardar]  [Cancelar]          │
+└────────────────────────────────────────────────────────────┘
+```
+
+</details>
+
+---
 
 ### Método 2: Instalação Manual
 
@@ -146,6 +314,162 @@ O script `Executar_DGT.bat` irá automaticamente:
    ```cmd
    python src\seletor_projeto.py
    ```
+
+---
+
+## ❓ Perguntas Frequentes (FAQ) - Assistente de Configuração
+
+<details>
+<summary><b>📌 Como funciona a detecção de primeira execução?</b></summary>
+
+O sistema verifica automaticamente se a pasta `dgt_venv` existe. Se não existir, considera-se primeira execução e o assistente gráfico é ativado.
+
+</details>
+
+<details>
+<summary><b>🔄 Posso executar o assistente novamente?</b></summary>
+
+Sim! Para reconfigurar tudo:
+1. Elimine a pasta `dgt_venv`
+2. Elimine o ficheiro `config\caminhos.json`
+3. Execute `Executar_DGT.bat` novamente
+
+O assistente será ativado automaticamente.
+
+</details>
+
+<details>
+<summary><b>🔐 Onde são guardadas as minhas credenciais?</b></summary>
+
+As credenciais são guardadas localmente no ficheiro `config\caminhos.json` no seu computador. 
+
+**Importante:**
+- ✅ Guardadas **apenas localmente**
+- ✅ **Não são enviadas** para outros serviços
+- ✅ Usadas **apenas** para autenticação no servidor da DGT
+- ⚠️ Adicione `config\caminhos.json` ao `.gitignore` (já configurado)
+
+</details>
+
+<details>
+<summary><b>✏️ Como alterar as credenciais depois da primeira execução?</b></summary>
+
+Tem 3 opções:
+
+**Opção 1 - Edição Manual (Rápido):**
+```cmd
+notepad config\caminhos.json
+```
+Altere os campos `username` e `password` e guarde.
+
+**Opção 2 - Reconfigurar Tudo:**
+```cmd
+rmdir /s /q dgt_venv
+del config\caminhos.json
+Executar_DGT.bat
+```
+
+**Opção 3 - Apenas Credenciais:**
+```cmd
+del config\caminhos.json
+Executar_DGT.bat
+```
+(O venv existente será reutilizado, apenas credenciais são solicitadas)
+
+</details>
+
+<details>
+<summary><b>❌ O que fazer se cancelar o assistente?</b></summary>
+
+Se cancelar em qualquer janela popup:
+- O processo é interrompido de forma segura
+- Nenhum ficheiro é criado ou modificado
+- Pode executar `Executar_DGT.bat` novamente quando quiser
+- O assistente começará do início
+
+</details>
+
+<details>
+<summary><b>🌐 Não tenho conta DGT. Como criar?</b></summary>
+
+**Passo a passo:**
+1. Aceda a: [https://cdd.dgterritorio.gov.pt/dgt-fe](https://cdd.dgterritorio.gov.pt/dgt-fe)
+2. Clique em **"Registar"** ou **"Criar Conta Nova"**
+3. Preencha o formulário com:
+   - Nome completo
+   - Email válido (será o username)
+   - Password segura
+   - Dados de contacto
+4. Aguarde email de confirmação
+5. Clique no link de ativação recebido por email
+6. Use o email e password no assistente de configuração
+
+**Nota:** O link para registo também está disponível na janela de credenciais (clicável).
+
+</details>
+
+<details>
+<summary><b>⚠️ Erro: "Python não encontrado"</b></summary>
+
+**Causa:** Python 3.8+ não está instalado ou não está no PATH do sistema.
+
+**Solução:**
+1. Instale Python 3.8 ou superior: [https://www.python.org/downloads/](https://www.python.org/downloads/)
+2. Durante a instalação, marque **"Add Python to PATH"**
+3. Reinicie o terminal/computador
+4. Execute `Executar_DGT.bat` novamente
+
+</details>
+
+<details>
+<summary><b>⚠️ Erro durante instalação de dependências</b></summary>
+
+**Possíveis causas:**
+- Conexão à Internet instável
+- Firewall/Antivírus bloqueando downloads
+- Falta de permissões administrativas
+
+**Soluções:**
+1. Verifique conexão à Internet
+2. Desative temporariamente antivírus
+3. Execute como Administrador (botão direito → "Executar como administrador")
+4. Tente instalação manual:
+   ```cmd
+   dgt_venv\Scripts\activate
+   pip install -r requirements.txt -v
+   ```
+
+</details>
+
+<details>
+<summary><b>🔧 O popup não aparece no Windows</b></summary>
+
+**Causa:** Restrições de PowerShell ExecutionPolicy.
+
+**Solução:**
+Execute uma vez como Administrador:
+```powershell
+Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser
+```
+
+Depois execute normalmente `Executar_DGT.bat`.
+
+</details>
+
+<details>
+<summary><b>📊 Quanto tempo demora a primeira execução?</b></summary>
+
+**Tempo estimado: 5-10 minutos**
+
+Dividido em:
+- Criação venv: ~30 segundos
+- Instalação dependências: 3-5 minutos (varia com conexão)
+- Configuração credenciais: ~1 minuto (interação do utilizador)
+- Inicialização app: ~10 segundos
+
+**Nota:** Execuções seguintes são instantâneas (2-5 segundos).
+
+</details>
 
 ---
 
@@ -259,12 +583,10 @@ DGT_Rasters/
 ├── 📂 dados/                       # Dados base do projeto
 │   └── 📦 dados_dgt.gpkg          # GeoPackage (grelha DGT + Portugal)
 │
-├── 📂 dgt_venv/                    # Virtual environment (auto-criado)
-│   ├── Scripts/
-│   ├── Lib/
-│   └── ...
-│
-└── 📂 docs/                        # Documentação adicional
+└── 📂 dgt_venv/                    # Virtual environment (auto-criado)
+    ├── Scripts/
+    ├── Lib/
+    └── ...
 ```
 
 **Nota sobre Outputs**: Os ficheiros descarregados são guardados na pasta que escolher durante a execução da aplicação (selecionada via diálogo).

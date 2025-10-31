@@ -5,7 +5,254 @@ import os
 import json
 import config_loader
 import webbrowser
+import sys
 
+# Função para validar e solicitar credenciais se necessário
+def validar_credenciais():
+    """
+    Valida se as credenciais estão configuradas corretamente.
+    Se estiverem vazias ou com valores padrão, solicita ao utilizador.
+    Retorna True se as credenciais foram validadas/configuradas com sucesso.
+    """
+    try:
+        config = config_loader.load_config()
+        username = config.get('credentials', {}).get('username', '')
+        password = config.get('credentials', {}).get('password', '')
+        
+    except (json.JSONDecodeError, UnicodeDecodeError) as e:
+        # Erro de encoding ou JSON inválido
+        root = tk.Tk()
+        root.withdraw()
+        
+        resposta = messagebox.askyesno(
+            "Erro no Ficheiro de Configuração",
+            f"Erro ao ler o ficheiro config\\caminhos.json:\n\n"
+            f"{str(e)}\n\n"
+            f"Possível problema de encoding UTF-8.\n\n"
+            f"Deseja recriar o ficheiro a partir do template?",
+            icon='error'
+        )
+        
+        root.destroy()
+        
+        if resposta:
+            # Recriar a partir do template
+            try:
+                script_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+                config_path = os.path.join(script_dir, 'config', 'caminhos.json')
+                template_path = os.path.join(script_dir, 'config', 'caminhos.json.template')
+                
+                if os.path.exists(template_path):
+                    import shutil
+                    # Fazer backup
+                    backup_path = config_path + '.backup'
+                    if os.path.exists(config_path):
+                        shutil.copy2(config_path, backup_path)
+                    
+                    # Copiar template
+                    shutil.copy2(template_path, config_path)
+                    
+                    root = tk.Tk()
+                    root.withdraw()
+                    messagebox.showinfo(
+                        "Ficheiro Recriado",
+                        f"Ficheiro recriado a partir do template.\n\n"
+                        f"Backup guardado em:\n{backup_path}\n\n"
+                        f"Por favor, configure as credenciais novamente."
+                    )
+                    root.destroy()
+                    
+                    # Recarregar e continuar com validação
+                    config = config_loader.load_config()
+                    username = config.get('credentials', {}).get('username', '')
+                    password = config.get('credentials', {}).get('password', '')
+                else:
+                    root = tk.Tk()
+                    root.withdraw()
+                    messagebox.showerror(
+                        "Erro",
+                        "Template não encontrado.\n\n"
+                        "Por favor, corrija manualmente:\n"
+                        "config\\caminhos.json"
+                    )
+                    root.destroy()
+                    return False
+                    
+            except Exception as fix_error:
+                root = tk.Tk()
+                root.withdraw()
+                messagebox.showerror(
+                    "Erro",
+                    f"Não foi possível recriar o ficheiro:\n{str(fix_error)}"
+                )
+                root.destroy()
+                return False
+        else:
+            return False
+    
+    except Exception as e:
+        root = tk.Tk()
+        root.withdraw()
+        messagebox.showerror(
+            "Erro",
+            f"Erro ao validar credenciais:\n{str(e)}\n\n"
+            "Verifique o ficheiro config\\caminhos.json"
+        )
+        root.destroy()
+        return False
+    
+    # Verificar se credenciais são válidas (não vazias e não valores padrão)
+    credenciais_invalidas = (
+        not username or 
+        not password or
+        username.strip() == '' or
+        password.strip() == '' or
+        username == 'SEU_EMAIL@AQUI.PT' or
+        password == 'SUA_PASSWORD_AQUI'
+    )
+    
+    if credenciais_invalidas:
+        # Tentar executar o script PowerShell de configuração de credenciais
+        script_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+        ps_script = os.path.join(script_dir, 'config', 'setup_inicial.ps1')
+        
+        # Mostrar aviso
+        root = tk.Tk()
+        root.withdraw()
+        
+        resposta = messagebox.askokcancel(
+            "Credenciais DGT Necessárias",
+            "As credenciais de acesso ao Centro de Descargas da DGT não estão configuradas ou são inválidas.\n\n"
+            "É necessário configurar:\n"
+            "• Username (Email de registo)\n"
+            "• Password\n\n"
+            "Deseja configurar agora?\n\n"
+            "Nota: Sem credenciais válidas não é possível descarregar dados.",
+            icon='warning'
+        )
+        
+        root.destroy()
+        
+        if not resposta:
+            return False
+        
+        # Executar popup de credenciais PowerShell
+        try:
+            ps_command = f'''
+$scriptPath = "{ps_script}"
+. $scriptPath
+$creds = Show-CredentialsDialog
+if ($creds) {{
+    $configPath = "{os.path.join(script_dir, 'config', 'caminhos.json')}"
+    if (Test-Path $configPath) {{
+        $config = Get-Content $configPath -Raw | ConvertFrom-Json
+        $config.credentials.username = $creds.Username
+        $config.credentials.password = $creds.Password
+        $config | ConvertTo-Json -Depth 10 | Set-Content $configPath -Encoding UTF8
+        exit 0
+    }} else {{
+        exit 2
+    }}
+}} else {{
+    exit 1
+}}
+'''
+            result = subprocess.run(
+                ['powershell', '-ExecutionPolicy', 'Bypass', '-Command', ps_command],
+                capture_output=True,
+                text=True
+            )
+            
+            if result.returncode == 0:
+                # Credenciais configuradas com sucesso
+                root = tk.Tk()
+                root.withdraw()
+                messagebox.showinfo(
+                    "Sucesso",
+                    "Credenciais configuradas com sucesso!\n\nA aplicação será iniciada."
+                )
+                root.destroy()
+                return True
+            elif result.returncode == 1:
+                # Utilizador cancelou
+                return False
+            else:
+                # Erro ao configurar
+                root = tk.Tk()
+                root.withdraw()
+                messagebox.showerror(
+                    "Erro",
+                    "Não foi possível configurar as credenciais.\n\n"
+                    "Por favor, edite manualmente o ficheiro:\n"
+                    "config\\caminhos.json"
+                )
+                root.destroy()
+                return False
+                
+        except Exception as e:
+            # Fallback: solicitar via Tkinter simples
+            root = tk.Tk()
+            root.withdraw()
+            
+            messagebox.showinfo(
+                "Configuração de Credenciais",
+                "Por favor, insira suas credenciais de acesso ao Centro de Descargas da DGT.\n\n"
+                "Se não tem conta, crie em:\nhttps://cdd.dgterritorio.gov.pt/dgt-fe"
+            )
+            
+            username = simpledialog.askstring(
+                "Username DGT",
+                "Insira o username (email):",
+                parent=root
+            )
+            
+            if not username:
+                root.destroy()
+                return False
+            
+            password = simpledialog.askstring(
+                "Password DGT",
+                "Insira a password:",
+                parent=root,
+                show='*'
+            )
+            
+            root.destroy()
+            
+            if not password:
+                return False
+            
+            # Guardar credenciais
+            try:
+                script_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+                config_path = os.path.join(script_dir, 'config', 'caminhos.json')
+                config['credentials']['username'] = username.strip()
+                config['credentials']['password'] = password
+                
+                with open(config_path, 'w', encoding='utf-8') as f:
+                    json.dump(config, f, indent=4, ensure_ascii=False)
+                
+                root = tk.Tk()
+                root.withdraw()
+                messagebox.showinfo(
+                    "Sucesso",
+                    "Credenciais configuradas com sucesso!"
+                )
+                root.destroy()
+                return True
+                
+            except Exception as save_error:
+                root = tk.Tk()
+                root.withdraw()
+                messagebox.showerror(
+                    "Erro",
+                    f"Erro ao guardar credenciais:\n{str(save_error)}"
+                )
+                root.destroy()
+                return False
+    
+    # Credenciais válidas
+    return True
 # Função para mostrar ajuda
 def mostrar_ajuda():
     """Mostra informações de ajuda"""
@@ -374,6 +621,11 @@ def open_map_picker(parent=None, produtos_vars=None):
 # Função para abrir a janela de seleção de projeto
 
 def selecionar_processo():
+    # Validar credenciais antes de iniciar a interface
+    if not validar_credenciais():
+        # Utilizador cancelou ou houve erro - encerrar aplicação
+        return
+    
     root = tk.Tk()
     root.withdraw()
     

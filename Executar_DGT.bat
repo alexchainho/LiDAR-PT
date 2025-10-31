@@ -13,9 +13,24 @@ echo.
 REM Ir para o diretório do script
 cd /d "%~dp0"
 
-REM Verificar se o virtual environment existe
+REM Verificar se é primeira execução (venv não existe)
+set "FIRST_RUN=0"
 if not exist "dgt_venv\" (
-    echo [SETUP] Virtual environment nao encontrado. A criar...
+    set "FIRST_RUN=1"
+    
+    echo [PRIMEIRA EXECUCAO] Detectada!
+    echo [INFO] Iniciando assistente de configuracao...
+    echo.
+    
+    REM Mostrar janela de boas-vindas
+    powershell -ExecutionPolicy Bypass -File "config\setup_inicial.ps1" Show-WelcomeDialog
+    if errorlevel 1 (
+        echo [INFO] Configuracao cancelada pelo utilizador.
+        pause
+        exit /b 0
+    )
+    
+    echo [SETUP] A criar virtual environment...
     echo.
     python -m venv dgt_venv
     
@@ -58,12 +73,41 @@ echo.
 
 REM Verificar se caminhos.json existe
 if not exist "config\caminhos.json" (
-    echo [AVISO] Ficheiro config\caminhos.json nao encontrado!
-    echo Por favor, copie config\caminhos.json.template para config\caminhos.json
-    echo e configure suas credenciais.
-    echo.
-    pause
-    exit /b 1
+    if "%FIRST_RUN%"=="1" (
+        echo [CONFIGURACAO] Ficheiro config\caminhos.json nao encontrado
+        echo [INFO] Solicitando credenciais DGT...
+        echo.
+        
+        REM Copiar template se existir
+        if exist "config\caminhos.json.template" (
+            copy "config\caminhos.json.template" "config\caminhos.json" >nul
+        )
+        
+        REM Solicitar credenciais via PowerShell
+        powershell -ExecutionPolicy Bypass -Command "& { $scriptPath = Join-Path '%~dp0' 'config\setup_inicial.ps1'; . $scriptPath; $creds = Show-CredentialsDialog; if ($creds) { $configPath = Join-Path '%~dp0' 'config\caminhos.json'; if (Test-Path $configPath) { $config = Get-Content $configPath -Raw -Encoding UTF8 | ConvertFrom-Json; $config.credentials.username = $creds.Username; $config.credentials.password = $creds.Password; $json = $config | ConvertTo-Json -Depth 10; [System.IO.File]::WriteAllText($configPath, $json, [System.Text.UTF8Encoding]::new($false)); exit 0 } else { exit 2 } } else { exit 1 } }"
+        
+        if errorlevel 2 (
+            echo [ERRO] Ficheiro de configuracao nao encontrado
+            pause
+            exit /b 1
+        )
+        
+        if errorlevel 1 (
+            echo [INFO] Configuracao cancelada pelo utilizador
+            pause
+            exit /b 0
+        )
+        
+        echo [OK] Credenciais configuradas com sucesso
+        echo.
+    ) else (
+        echo [AVISO] Ficheiro config\caminhos.json nao encontrado!
+        echo Por favor, copie config\caminhos.json.template para config\caminhos.json
+        echo e configure suas credenciais.
+        echo.
+        pause
+        exit /b 1
+    )
 )
 
 REM Iniciar a aplicação
