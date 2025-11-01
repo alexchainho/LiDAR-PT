@@ -1,7 +1,11 @@
-# ============================================================================
+﻿# ============================================================================
 # DGT Rasters - Setup Inicial
 # Script para configuração inicial do projeto
 # ============================================================================
+
+# Garantir encoding UTF-8
+[Console]::OutputEncoding = [System.Text.Encoding]::UTF8
+$OutputEncoding = [System.Text.Encoding]::UTF8
 
 Add-Type -AssemblyName System.Windows.Forms
 Add-Type -AssemblyName System.Drawing
@@ -9,7 +13,7 @@ Add-Type -AssemblyName System.Drawing
 # Função para mostrar aviso de Python não encontrado
 function Show-PythonNotFoundDialog {
     $form = New-Object System.Windows.Forms.Form
-    $form.Text = "Python Nao Encontrado"
+    $form.Text = "Python Não Encontrado"
     $form.Size = New-Object System.Drawing.Size(700, 680)
     $form.StartPosition = "CenterScreen"
     $form.FormBorderStyle = "FixedDialog"
@@ -30,113 +34,126 @@ function Show-PythonNotFoundDialog {
     $title = New-Object System.Windows.Forms.Label
     $title.Location = New-Object System.Drawing.Point(90, 30)
     $title.Size = New-Object System.Drawing.Size(580, 40)
-    $title.Text = "Python Nao Encontrado no Sistema"
+    $title.Text = "Python Não Encontrado no Sistema"
     $title.Font = New-Object System.Drawing.Font("Segoe UI", 14, [System.Drawing.FontStyle]::Bold)
     $title.ForeColor = [System.Drawing.Color]::DarkRed
     $form.Controls.Add($title)
     
     # Descrição
-    $description = New-Object System.Windows.Forms.TextBox
+    $description = New-Object System.Windows.Forms.RichTextBox
     $description.Location = New-Object System.Drawing.Point(20, 90)
     $description.Size = New-Object System.Drawing.Size(660, 470)
-    $description.Multiline = $true
     $description.ReadOnly = $true
-    $description.ScrollBars = "Vertical"
     $description.Font = New-Object System.Drawing.Font("Consolas", 9)
     $description.BackColor = [System.Drawing.Color]::LightYellow
     $description.Text = @"
 ===============================================================================
-                    PYTHON NAO ENCONTRADO
+                    PYTHON NÃO ENCONTRADO
 ===============================================================================
 
 O DGT Rasters requer Python 3.8 ou superior para funcionar.
 
-Python nao foi encontrado no PATH do sistema, o que significa que:
-  * Python nao esta instalado, OU
-  * Python esta instalado mas nao foi adicionado ao PATH durante instalacao
+Python não foi encontrado no PATH do sistema, o que significa que:
+  • Python não está instalado, OU
+  • Python está instalado mas não foi adicionado ao PATH durante instalação
 
 -------------------------------------------------------------------------------
-O QUE E PYTHON?
+O QUE É PYTHON?
 -------------------------------------------------------------------------------
-Python e uma linguagem de programacao necessaria para executar esta aplicacao.
-E gratuito, open-source e amplamente utilizado em ciencia de dados e GIS.
+Python é uma linguagem de programação necessária para executar esta aplicação.
+É gratuito, open-source e amplamente utilizado em ciência de dados e GIS.
 
 -------------------------------------------------------------------------------
-COMO INSTALAR PYTHON:
+PORQUÊ PYTHON?
+-------------------------------------------------------------------------------
+O DGT Rasters utiliza Python para:
+  • Processar dados geoespaciais (LiDAR, rasters)
+  • Gerir downloads automáticos do servidor DGT
+  • Manipular grandes volumes de dados geográficos
+  • Criar interfaces gráficas interativas com mapas
+  • Garantir compatibilidade com bibliotecas GIS standard (GDAL, GeoPandas)
+
+Sem Python, a aplicação NÃO pode funcionar.
+
+-------------------------------------------------------------------------------
+COMO INSTALAR PYTHON 3.13:
 -------------------------------------------------------------------------------
 
 PASSO 1: DOWNLOAD
-  • Aceda a: https://www.python.org/downloads/
-  • Clique em Download Python 3.12.x (ou versao mais recente)
+  • Clique no botão "Descarregar Python 3.13" abaixo
+  • Será redirecionado para: https://www.python.org/downloads/release/python-3139/
+  • percorra para baixo até encontrar "Windows installer (64-bit)"
   • Aguarde download do instalador (aproximadamente 25 MB)
 
-PASSO 2: INSTALACAO
-  • Execute o ficheiro descarregado (python-3.12.x.exe)
+PASSO 2: INSTALAÇÃO
+  • Execute o ficheiro descarregado (python-3.13.x.exe)
   
-  ** IMPORTANTE **
+  ** MUITO IMPORTANTE **
   
   ┌────────────────────────────────────────────────────────────────┐
   │                                                                │
-  │  ☑ MARQUE a opcao: "Add Python to PATH"                       │
+  │  ☑ MARQUE a opção: "Add Python 3.13 to PATH"                  │
   │                                                                │
-  │  Esta opcao e OBRIGATORIA para que o Windows encontre Python! │
+  │  Esta opção é OBRIGATÓRIA para que o Windows encontre Python!  │
   │                                                                │
   └────────────────────────────────────────────────────────────────┘
   
-  • Clique em "Install Now" (Instalacao Standard)
-  • Aguarde conclusao (2-5 minutos)
+  • Clique em "Install Now" (Instalação Standard)
+  • Aguarde conclusão (2-5 minutos)
   • Clique em "Close" ao finalizar
 
-PASSO 3: VERIFICACAO
+PASSO 3: VERIFICAÇÃO
   • Feche TODAS as janelas de terminal abertas
   • Abra um NOVO terminal (CMD ou PowerShell)
   • Digite: python --version
-  • Deve aparecer: Python 3.12.x (ou superior)
+  • Deve aparecer: Python 3.13.x (ou superior)
 
 PASSO 4: EXECUTAR DGT RASTERS
   • Execute novamente Executar_DGT.bat
-  • A instalacao continuara automaticamente
+  • A instalação continuará automaticamente
 
 -------------------------------------------------------------------------------
-REQUISITOS MINIMOS:
+REQUISITOS MÍNIMOS:
 -------------------------------------------------------------------------------
-  * Python 3.8 ou superior (recomendado: 3.12+)
-  * Sistema Operativo: Windows 10/11
-  * Espaco em disco: ~200 MB para Python + 1 GB para bibliotecas
+  • Python 3.8 ou superior (recomendado: 3.13+)
+  • Sistema Operativo: Windows 10/11
+  • Espaço em disco: ~200 MB para Python + 1 GB para bibliotecas
 
 -------------------------------------------------------------------------------
-JA TENHO PYTHON INSTALADO?
+JÁ TENHO PYTHON INSTALADO?
 -------------------------------------------------------------------------------
-Se instalou Python mas nao marcou "Add to PATH":
+Se instalou Python mas não marcou "Add to PATH":
 
-  SOLUCAO 1 - Reinstalar (Recomendado):
+  SOLUÇÃO 1 - Reinstalar (Recomendado):
     • Desinstale Python atual (Painel de Controlo > Programas)
     • Reinstale seguindo passos acima (marcar "Add to PATH")
   
-  SOLUCAO 2 - Adicionar PATH manualmente (Avancado):
-    • Painel de Controlo > Sistema > Configuracoes Avancadas
-    • Variaveis de Ambiente > PATH > Editar
-    • Adicionar: C:\Users\SeuUser\AppData\Local\Programs\Python\Python312
-    • Adicionar: C:\Users\SeuUser\AppData\Local\Programs\Python\Python312\Scripts
+  SOLUÇÃO 2 - Adicionar PATH manualmente (Avançado):
+    • Painel de Controlo > Sistema > Configurações Avançadas
+    • Variáveis de Ambiente > PATH > Editar
+    • Adicionar: C:\Users\SeuUser\AppData\Local\Programs\Python\Python313
+    • Adicionar: C:\Users\SeuUser\AppData\Local\Programs\Python\Python313\Scripts
 
 ===============================================================================
 
-Clique em 'Abrir Site Python' para descarregar o instalador.
-Apos instalar, execute novamente Executar_DGT.bat
+Clique em 'Descarregar Python 3.13' para abrir a página de download.
+Após instalar, execute novamente Executar_DGT.bat
 
 "@
     $form.Controls.Add($description)
     
-    # Botão para abrir site
+    # Botão para abrir site e fechar programa
     $btnDownload = New-Object System.Windows.Forms.Button
-    $btnDownload.Location = New-Object System.Drawing.Point(340, 580)
-    $btnDownload.Size = New-Object System.Drawing.Size(180, 40)
-    $btnDownload.Text = "Abrir Site Python"
+    $btnDownload.Location = New-Object System.Drawing.Point(300, 580)
+    $btnDownload.Size = New-Object System.Drawing.Size(220, 40)
+    $btnDownload.Text = "Descarregar Python 3.13"
     $btnDownload.Font = New-Object System.Drawing.Font("Segoe UI", 11, [System.Drawing.FontStyle]::Bold)
-    $btnDownload.BackColor = [System.Drawing.Color]::LightBlue
+    $btnDownload.BackColor = [System.Drawing.Color]::LightGreen
     $btnDownload.FlatStyle = "Flat"
     $btnDownload.Add_Click({
         Start-Process "https://www.python.org/downloads/"
+        $form.DialogResult = [System.Windows.Forms.DialogResult]::Abort
+        $form.Close()
     })
     $form.Controls.Add($btnDownload)
     
@@ -163,7 +180,7 @@ function Show-PythonVersionDialog {
     )
     
     $form = New-Object System.Windows.Forms.Form
-    $form.Text = "Versao Python Desatualizada"
+    $form.Text = "Versão Python Desatualizada"
     $form.Size = New-Object System.Drawing.Size(700, 580)
     $form.StartPosition = "CenterScreen"
     $form.FormBorderStyle = "FixedDialog"
@@ -184,96 +201,95 @@ function Show-PythonVersionDialog {
     $title = New-Object System.Windows.Forms.Label
     $title.Location = New-Object System.Drawing.Point(90, 30)
     $title.Size = New-Object System.Drawing.Size(580, 40)
-    $title.Text = "Versao Python Desatualizada"
+    $title.Text = "Versão Python Desatualizada"
     $title.Font = New-Object System.Drawing.Font("Segoe UI", 14, [System.Drawing.FontStyle]::Bold)
     $title.ForeColor = [System.Drawing.Color]::DarkOrange
     $form.Controls.Add($title)
     
     # Descrição
-    $description = New-Object System.Windows.Forms.TextBox
+    $description = New-Object System.Windows.Forms.RichTextBox
     $description.Location = New-Object System.Drawing.Point(20, 90)
     $description.Size = New-Object System.Drawing.Size(660, 380)
-    $description.Multiline = $true
     $description.ReadOnly = $true
-    $description.ScrollBars = "Vertical"
     $description.Font = New-Object System.Drawing.Font("Consolas", 9)
     $description.BackColor = [System.Drawing.Color]::LightYellow
     $description.Text = @"
 ===============================================================================
-              VERSAO PYTHON DESATUALIZADA DETECTADA
+              VERSÃO PYTHON DESATUALIZADA DETETADA
 ===============================================================================
 
-VERSAO ATUAL:    Python $CurrentVersion
-VERSAO MINIMA:   Python 3.8
-VERSAO RECOMENDADA: Python 3.12+
+VERSÃO ATUAL:        Python $CurrentVersion
+VERSÃO MÍNIMA:       Python 3.8
+VERSÃO RECOMENDADA:  Python 3.13+
 
 -------------------------------------------------------------------------------
 PROBLEMA:
 -------------------------------------------------------------------------------
-A versao Python instalada no sistema ($CurrentVersion) e muito antiga e 
-nao e compativel com as bibliotecas modernas necessarias para o DGT Rasters.
+A versão Python instalada no sistema ($CurrentVersion) é muito antiga e 
+não é compatível com as bibliotecas modernas necessárias para o DGT Rasters.
 
 Bibliotecas como GeoPandas, Rasterio e NumPy requerem Python 3.8 ou superior.
 
 -------------------------------------------------------------------------------
-SOLUCAO: ATUALIZAR PYTHON
+SOLUÇÃO: ATUALIZAR PYTHON
 -------------------------------------------------------------------------------
 
-OPCAO 1 - INSTALACAO LADO-A-LADO (Recomendado):
+OPÇÃO 1 - INSTALAÇÃO LADO-A-LADO (Recomendado):
   
-  1. Mantenha a versao atual (nao desinstalar)
-  2. Instale nova versao Python 3.12+ em paralelo
-  3. Durante instalacao, marque:
-     ☑ Add Python to PATH
+  1. Mantenha a versão atual (não desinstalar)
+  2. Instale nova versão Python 3.13+ em paralelo
+  3. Durante instalação, marque:
+     ☑ Add Python 3.13 to PATH
      ☑ Install for all users (opcional)
   
-  4. A nova versao sera usada por padrao
+  4. A nova versão será usada por padrão
 
-OPCAO 2 - DESINSTALAR E REINSTALAR:
+OPÇÃO 2 - DESINSTALAR E REINSTALAR:
   
   1. Painel de Controlo > Programas > Desinstalar Python $CurrentVersion
   2. Aceda a: https://www.python.org/downloads/
-  3. Descarregue Python 3.12.x ou superior
-  4. Execute instalador com opcao "Add to PATH" marcada
+  3. Descarregue Python 3.13.x ou superior
+  4. Execute instalador com opção "Add to PATH" marcada
 
 -------------------------------------------------------------------------------
 PASSOS PARA ATUALIZAR:
 -------------------------------------------------------------------------------
 
 1. DOWNLOAD:
-   • Aceda: https://www.python.org/downloads/
-   • Download Python 3.12.x (botao amarelo grande)
+   • Clique no botão "Descarregar Python 3.13" abaixo
+   • Será redirecionado para: https://www.python.org/downloads/
+   • Download Python 3.13.x (botão amarelo grande)
 
-2. INSTALACAO:
-   • Execute python-3.12.x.exe
-   • ☑ MARQUE: "Add Python to PATH"
+2. INSTALAÇÃO:
+   • Execute python-3.13.x.exe
+   • ☑ MARQUE: "Add Python 3.13 to PATH"
    • Clique: "Install Now"
    • Aguarde 2-5 minutos
 
-3. VERIFICACAO:
+3. VERIFICAÇÃO:
    • Feche todos os terminais abertos
    • Abra NOVO terminal
    • Digite: python --version
-   • Confirme: Python 3.12.x
+   • Confirme: Python 3.13.x
 
 4. EXECUTAR DGT RASTERS:
    • Execute novamente Executar_DGT.bat
-   • Instalacao continuara automaticamente
+   • Instalação continuará automaticamente
 
 ===============================================================================
 
-Clique em 'Abrir Site Python' para descarregar versao atualizada.
+Clique em 'Descarregar Python 3.13' para obter a versão atualizada.
 
 "@
     $form.Controls.Add($description)
     
     # Botão para abrir site
     $btnDownload = New-Object System.Windows.Forms.Button
-    $btnDownload.Location = New-Object System.Drawing.Point(340, 490)
-    $btnDownload.Size = New-Object System.Drawing.Size(180, 40)
-    $btnDownload.Text = "Abrir Site Python"
+    $btnDownload.Location = New-Object System.Drawing.Point(300, 490)
+    $btnDownload.Size = New-Object System.Drawing.Size(220, 40)
+    $btnDownload.Text = "Descarregar Python 3.13"
     $btnDownload.Font = New-Object System.Drawing.Font("Segoe UI", 11, [System.Drawing.FontStyle]::Bold)
-    $btnDownload.BackColor = [System.Drawing.Color]::LightBlue
+    $btnDownload.BackColor = [System.Drawing.Color]::LightGreen
     $btnDownload.FlatStyle = "Flat"
     $btnDownload.Add_Click({
         Start-Process "https://www.python.org/downloads/"
@@ -316,60 +332,58 @@ function Show-WelcomeDialog {
     $form.Controls.Add($title)
     
     # Descrição
-    $description = New-Object System.Windows.Forms.TextBox
+    $description = New-Object System.Windows.Forms.RichTextBox
     $description.Location = New-Object System.Drawing.Point(20, 70)
     $description.Size = New-Object System.Drawing.Size(610, 340)
-    $description.Multiline = $true
     $description.ReadOnly = $true
-    $description.ScrollBars = "Vertical"
     $description.Font = New-Object System.Drawing.Font("Consolas", 9)
     $description.BackColor = [System.Drawing.Color]::White
     $description.Text = @"
 ===============================================================================
-                     PRIMEIRA EXECUCAO DETECTADA!
+                     PRIMEIRA EXECUÇÃO DETETADA!
 ===============================================================================
 
-Este assistente ira configurar o DGT Rasters no seu sistema.
+Este assistente irá configurar o DGT Rasters no seu sistema.
 
-PASSOS DA INSTALACAO:
+PASSOS DA INSTALAÇÃO:
 
 -------------------------------------------------------------------------------
   1. CRIAR AMBIENTE VIRTUAL PYTHON (dgt_venv)
-     * Isola as dependencias do projeto
-     * Evita conflitos com outros projetos Python
-     * Garante versoes especificas das bibliotecas
+     • Isola as dependências do projeto
+     • Evita conflitos com outros projetos Python
+     • Garante versões específicas das bibliotecas
 
 -------------------------------------------------------------------------------
-  2. INSTALAR DEPENDENCIAS NECESSARIAS
-     * GeoPandas, Rasterio, Tkinter e outras bibliotecas
-     * Ferramentas para processamento geoespacial
-     * Pode demorar 3-5 minutos (download + instalacao)
+  2. INSTALAR DEPENDÊNCIAS NECESSÁRIAS
+     • GeoPandas, Rasterio, Tkinter e outras bibliotecas
+     • Ferramentas para processamento geoespacial
+     • Pode demorar 3-5 minutos (download + instalação)
 
 -------------------------------------------------------------------------------
   3. CONFIGURAR CREDENCIAIS DGT
-     * Username e password para acesso aos dados
-     * Necessario para download de ficheiros LiDAR
-     * Sera solicitado numa janela apos instalacao
+     • Username e password para acesso aos dados
+     • Necessário para download de ficheiros LiDAR
+     • Será solicitado numa janela após instalação
 
 -------------------------------------------------------------------------------
-  4. INICIAR APLICACAO
-     * Interface grafica com mapa interativo
-     * Selecao de produtos (LAZ, MDS, MDT)
-     * Definicao de area de interesse
+  4. INICIAR APLICAÇÃO
+     • Interface gráfica com mapa interativo
+     • Seleção de produtos (LAZ, MDS, MDT)
+     • Definição de área de interesse
 
 ===============================================================================
 
 REQUISITOS:
-  [OK] Python 3.8+ instalado (obrigatorio)
-  [OK] Conexao a Internet (obrigatoria)
-  [OK] Espaco em disco: minimo 1GB para instalacao
-  [..] Credenciais DGT (sera solicitado a seguir)
+  [OK] Python 3.8+ instalado (obrigatório)
+  [OK] Conexão à Internet (obrigatória)
+  [OK] Espaço em disco: mínimo 1GB para instalação
+  [..] Credenciais DGT (será solicitado a seguir)
 
 TEMPO ESTIMADO: 5-10 minutos
 
 ===============================================================================
 
-Clique em 'Continuar' para iniciar a instalacao...
+Clique em 'Continuar' para iniciar a instalação...
 
 "@
     $form.Controls.Add($description)
@@ -417,18 +431,16 @@ function Show-CredentialsDialog {
     $title = New-Object System.Windows.Forms.Label
     $title.Location = New-Object System.Drawing.Point(20, 20)
     $title.Size = New-Object System.Drawing.Size(610, 40)
-    $title.Text = "Configuracao de Credenciais de Acesso"
+    $title.Text = "Configuração de Credenciais de Acesso"
     $title.Font = New-Object System.Drawing.Font("Segoe UI", 13, [System.Drawing.FontStyle]::Bold)
     $title.ForeColor = [System.Drawing.Color]::DarkBlue
     $form.Controls.Add($title)
     
     # Informação
-    $info = New-Object System.Windows.Forms.TextBox
+    $info = New-Object System.Windows.Forms.RichTextBox
     $info.Location = New-Object System.Drawing.Point(20, 70)
     $info.Size = New-Object System.Drawing.Size(620, 320)
-    $info.Multiline = $true
     $info.ReadOnly = $true
-    $info.ScrollBars = "Vertical"
     $info.Font = New-Object System.Drawing.Font("Consolas", 9)
     $info.BackColor = [System.Drawing.Color]::LightYellow
     $info.Text = @"
@@ -436,38 +448,38 @@ function Show-CredentialsDialog {
          ACESSO AO CENTRO DE DESCARGAS DE DADOS DA DGT
 ===============================================================================
 
-Para descarregar dados geograficos (LiDAR, MDS, MDT) da 
-Direcao-Geral do Territorio, e necessario ter credenciais de acesso ao 
+Para descarregar dados geográficos (LiDAR, MDS, MDT) da 
+Direção-Geral do Território, é necessário ter credenciais de acesso ao 
 Centro de Descargas de Dados (CDD).
 
 -------------------------------------------------------------------------------
-INFORMACAO DO SERVICO:
+INFORMAÇÃO DO SERVIÇO:
 -------------------------------------------------------------------------------
-  * Entidade: Direcao-Geral do Territorio (DGT)
-  * Servico: Centro de Descargas de Dados (CDD)
-  * URL: https://cdd.dgterritorio.gov.pt
-  * Dados: LiDAR, Modelos Digitais de Portugal
+  • Entidade: Direção-Geral do Território (DGT)
+  • Serviço: Centro de Descargas de Dados (CDD)
+  • URL: https://cdd.dgterritorio.gov.pt
+  • Dados: LiDAR, Modelos Digitais de Portugal
 
 -------------------------------------------------------------------------------
-NAO TEM CONTA? SIGA ESTES PASSOS:
+NÃO TEM CONTA? SIGA ESTES PASSOS:
 -------------------------------------------------------------------------------
 
   1. Aceda ao site: https://cdd.dgterritorio.gov.pt/dgt-fe (link em baixo)
   
   2. Clique em Registar / Criar Conta Nova
   
-  3. Preencha o formulario com os dados solicitados
+  3. Preencha o formulário com os dados solicitados
 
-  4. Pode ser necessario aguardar email de confirmacao para ativar a conta
+  4. Pode ser necessário aguardar email de confirmação para ativar a conta
 
-  5. Apos ativacao, utilize as credenciais abaixo
+  5. Após ativação, utilize as credenciais abaixo
 
 -------------------------------------------------------------------------------
 IMPORTANTE:
 -------------------------------------------------------------------------------
-  * As credenciais sao guardadas localmente em: config\caminhos.json
-  * Nao sao partilhadas ou enviadas para outros servicos
-  * Sao usadas apenas para autenticacao no servidor DGT
+  • As credenciais são guardadas localmente em: config\caminhos.json
+  • Não são partilhadas ou enviadas para outros serviços
+  • São usadas apenas para autenticação no servidor DGT
 
 ===============================================================================
 
@@ -509,7 +521,7 @@ IMPORTANTE:
     $linkLabel = New-Object System.Windows.Forms.LinkLabel
     $linkLabel.Location = New-Object System.Drawing.Point(20, 485)
     $linkLabel.Size = New-Object System.Drawing.Size(610, 25)
-    $linkLabel.Text = "Nao tem conta? Clique aqui para criar registo no Centro de Descargas da DGT"
+    $linkLabel.Text = "Não tem conta? Clique aqui para criar registo no Centro de Descargas da DGT"
     $linkLabel.Font = New-Object System.Drawing.Font("Segoe UI", 10, [System.Drawing.FontStyle]::Italic)
     $linkLabel.LinkColor = [System.Drawing.Color]::Blue
     $linkLabel.ActiveLinkColor = [System.Drawing.Color]::Red
@@ -530,8 +542,8 @@ IMPORTANTE:
     $btnOK.Add_Click({
         if ([string]::IsNullOrWhiteSpace($txtUsername.Text) -or [string]::IsNullOrWhiteSpace($txtPassword.Text)) {
             [System.Windows.Forms.MessageBox]::Show(
-                "Por favor, preencha o username (email) e password.`n`nSem credenciais nao e possivel descarregar dados da DGT.",
-                "Campos Obrigatorios",
+                "Por favor, preencha o username (email) e password.`n`nSem credenciais não é possível descarregar dados da DGT.",
+                "Campos Obrigatórios",
                 [System.Windows.Forms.MessageBoxButtons]::OK,
                 [System.Windows.Forms.MessageBoxIcon]::Warning
             )
