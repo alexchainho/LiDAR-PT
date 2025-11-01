@@ -1,4 +1,5 @@
 @echo off
+setlocal enabledelayedexpansion
 REM ============================================================================
 REM  DGT Rasters - Launcher Script
 REM  Projeto criado com apoio de GitHub Copilot AI
@@ -13,13 +14,13 @@ echo   DGT RASTERS - Sistema de Download de Dados Geoespaciais
 echo ========================================================================
 echo.
 
-REM Ir para o diretório do script
+REM Ir para o diretorio do script
 cd /d "%~dp0"
 
-REM Verificar se é primeira execução (venv não existe)
-set "FIRST_RUN=0"
-if not exist "dgt_venv\" (
-    set "FIRST_RUN=1"
+REM Verificar se e primeira execucao (venv nao existe)
+set FIRST_RUN=0
+if not exist dgt_venv\ (
+    set FIRST_RUN=1
     
     echo [PRIMEIRA EXECUCAO] Detectada!
     echo [INFO] Iniciando assistente de configuracao...
@@ -49,7 +50,7 @@ if not exist "dgt_venv\" (
 )
 
 REM Verificar se o Python do venv existe
-if not exist "dgt_venv\Scripts\python.exe" (
+if not exist dgt_venv\Scripts\python.exe (
     echo [ERRO] Virtual environment nao foi criado corretamente
     echo Por favor, verifique se Python 3.8+ esta instalado
     pause
@@ -79,15 +80,15 @@ echo [OK] Dependencias verificadas
 echo.
 
 REM Verificar se caminhos.json existe
-if not exist "config\caminhos.json" (
-    if "%FIRST_RUN%"=="1" (
+if not exist config\caminhos.json (
+    if "!FIRST_RUN!"=="1" (
         echo [CONFIGURACAO] Ficheiro config\caminhos.json nao encontrado
         echo [INFO] Solicitando credenciais DGT...
         echo.
         
         REM Copiar template se existir
-        if exist "config\caminhos.json.template" (
-            copy "config\caminhos.json.template" "config\caminhos.json" >nul
+        if exist config\caminhos.json.template (
+            copy config\caminhos.json.template config\caminhos.json >nul
         )
         
         REM Solicitar credenciais via PowerShell
