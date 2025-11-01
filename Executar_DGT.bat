@@ -48,25 +48,23 @@ if not exist "dgt_venv\" (
     echo.
 )
 
-REM Ativar o virtual environment
-echo [SETUP] A ativar ambiente virtual...
-call dgt_venv\Scripts\activate.bat
-
-if errorlevel 1 (
-    echo [ERRO] Falha ao ativar virtual environment
+REM Verificar se o Python do venv existe
+if not exist "dgt_venv\Scripts\python.exe" (
+    echo [ERRO] Virtual environment nao foi criado corretamente
+    echo Por favor, verifique se Python 3.8+ esta instalado
     pause
     exit /b 1
 )
 
-echo [OK] Ambiente virtual ativado
+echo [OK] Ambiente virtual encontrado
 echo.
 
-REM Instalar/atualizar dependências
+REM Instalar/atualizar dependências usando o Python do venv
 echo [SETUP] A verificar dependencias...
 echo.
-pip install --upgrade pip
+dgt_venv\Scripts\python.exe -m pip install --upgrade pip
 echo.
-pip install -r requirements.txt
+dgt_venv\Scripts\python.exe -m pip install -r requirements.txt
 
 if errorlevel 1 (
     echo.

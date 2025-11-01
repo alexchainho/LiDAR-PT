@@ -1,4 +1,4 @@
-# ============================================================================
+﻿# ============================================================================
 # DGT Rasters - Setup Inicial
 # Script para configuração inicial do projeto
 # ============================================================================
@@ -26,60 +26,59 @@ function Show-WelcomeDialog {
     $form.Controls.Add($title)
     
     # Descrição
-    $description = New-Object System.Windows.Forms.TextBox
+    $description = New-Object System.Windows.Forms.RichTextBox
     $description.Location = New-Object System.Drawing.Point(20, 70)
     $description.Size = New-Object System.Drawing.Size(610, 340)
-    $description.Multiline = $true
     $description.ReadOnly = $true
     $description.ScrollBars = "Vertical"
     $description.Font = New-Object System.Drawing.Font("Consolas", 9)
     $description.BackColor = [System.Drawing.Color]::White
     $description.Text = @"
 ===============================================================================
-                     PRIMEIRA EXECUCAO DETECTADA!
+                     PRIMEIRA EXECUÇÃO DETECTADA!
 ===============================================================================
 
-Este assistente ira configurar o DGT Rasters no seu sistema.
+Este assistente irá configurar o DGT Rasters no seu sistema.
 
-PASSOS DA INSTALACAO:
+PASSOS DA INSTALAÇÃO:
 
 -------------------------------------------------------------------------------
   1. CRIAR AMBIENTE VIRTUAL PYTHON (dgt_venv)
-     * Isola as dependencias do projeto
+     * Isola as dependências do projeto
      * Evita conflitos com outros projetos Python
-     * Garante versoes especificas das bibliotecas
+     * Garante versões específicas das bibliotecas
 
 -------------------------------------------------------------------------------
-  2. INSTALAR DEPENDENCIAS NECESSARIAS
+  2. INSTALAR DEPENDÊNCIAS NECESSÁRIAS
      * GeoPandas, Rasterio, Tkinter e outras bibliotecas
      * Ferramentas para processamento geoespacial
-     * Pode demorar 3-5 minutos (download + instalacao)
+     * Pode demorar 3-5 minutos (download + instalação)
 
 -------------------------------------------------------------------------------
   3. CONFIGURAR CREDENCIAIS DGT
      * Username e password para acesso aos dados
-     * Necessario para download de ficheiros LiDAR
-     * Sera solicitado numa janela apos instalacao
+     * Necessário para download de ficheiros LiDAR
+     * Será solicitado numa janela após instalação
 
 -------------------------------------------------------------------------------
-  4. INICIAR APLICACAO
-     * Interface grafica com mapa interativo
-     * Selecao de produtos (LAZ, MDS, MDT)
-     * Definicao de area de interesse
+  4. INICIAR APLICAÇÃO
+     * Interface gráfica com mapa interativo
+     * Seleção de produtos (LAZ, MDS, MDT)
+     * Definição de área de interesse
 
 ===============================================================================
 
 REQUISITOS:
-  [OK] Python 3.8+ instalado (obrigatorio)
-  [OK] Conexao a Internet (obrigatoria)
-  [OK] Espaco em disco: minimo 1GB para instalacao
-  [..] Credenciais DGT (sera solicitado a seguir)
+  [OK] Python 3.8+ instalado (obrigatório)
+  [OK] Conexão à Internet (obrigatória)
+  [OK] Espaço em disco: mínimo 1GB para instalação
+  [..] Credenciais DGT (será solicitado a seguir)
 
 TEMPO ESTIMADO: 5-10 minutos
 
 ===============================================================================
 
-Clique em 'Continuar' para iniciar a instalacao...
+Clique em 'Continuar' para iniciar a instalação...
 
 "@
     $form.Controls.Add($description)
@@ -127,16 +126,15 @@ function Show-CredentialsDialog {
     $title = New-Object System.Windows.Forms.Label
     $title.Location = New-Object System.Drawing.Point(20, 20)
     $title.Size = New-Object System.Drawing.Size(610, 40)
-    $title.Text = "Configuracao de Credenciais de Acesso"
+    $title.Text = "Configuração de Credenciais de Acesso"
     $title.Font = New-Object System.Drawing.Font("Segoe UI", 13, [System.Drawing.FontStyle]::Bold)
     $title.ForeColor = [System.Drawing.Color]::DarkBlue
     $form.Controls.Add($title)
     
     # Informação
-    $info = New-Object System.Windows.Forms.TextBox
+    $info = New-Object System.Windows.Forms.RichTextBox
     $info.Location = New-Object System.Drawing.Point(20, 70)
     $info.Size = New-Object System.Drawing.Size(620, 320)
-    $info.Multiline = $true
     $info.ReadOnly = $true
     $info.ScrollBars = "Vertical"
     $info.Font = New-Object System.Drawing.Font("Consolas", 9)
@@ -146,38 +144,38 @@ function Show-CredentialsDialog {
          ACESSO AO CENTRO DE DESCARGAS DE DADOS DA DGT
 ===============================================================================
 
-Para descarregar dados geograficos (LiDAR, MDS, MDT) da 
-Direcao-Geral do Territorio, e necessario ter credenciais de acesso ao 
+Para descarregar dados geográficos (LiDAR, MDS, MDT) da 
+Direção-Geral do Território, é necessário ter credenciais de acesso ao 
 Centro de Descargas de Dados (CDD).
 
 -------------------------------------------------------------------------------
-INFORMACAO DO SERVICO:
+INFORMAÇÃO DO SERVIÇO:
 -------------------------------------------------------------------------------
-  * Entidade: Direcao-Geral do Territorio (DGT)
-  * Servico: Centro de Descargas de Dados (CDD)
+  * Entidade: Direção-Geral do Território (DGT)
+  * Serviço: Centro de Descargas de Dados (CDD)
   * URL: https://cdd.dgterritorio.gov.pt
   * Dados: LiDAR, Modelos Digitais de Portugal
 
 -------------------------------------------------------------------------------
-NAO TEM CONTA? SIGA ESTES PASSOS:
+NÃO TEM CONTA? SIGA ESTES PASSOS:
 -------------------------------------------------------------------------------
 
   1. Aceda ao site: https://cdd.dgterritorio.gov.pt/dgt-fe (link em baixo)
   
   2. Clique em Registar / Criar Conta Nova
   
-  3. Preencha o formulario com os dados solicitados
+  3. Preencha o formulário com os dados solicitados
 
-  4. Pode ser necessario aguardar email de confirmacao para ativar a conta
+  4. Pode ser necessário aguardar email de confirmação para ativar a conta
 
-  5. Apos ativacao, utilize as credenciais abaixo
+  5. Após ativação, utilize as credenciais abaixo
 
 -------------------------------------------------------------------------------
 IMPORTANTE:
 -------------------------------------------------------------------------------
-  * As credenciais sao guardadas localmente em: config\caminhos.json
-  * Nao sao partilhadas ou enviadas para outros servicos
-  * Sao usadas apenas para autenticacao no servidor DGT
+  * As credenciais são guardadas localmente em: config\caminhos.json
+  * Não são partilhadas ou enviadas para outros serviços
+  * São usadas apenas para autenticação no servidor DGT
 
 ===============================================================================
 
@@ -219,7 +217,7 @@ IMPORTANTE:
     $linkLabel = New-Object System.Windows.Forms.LinkLabel
     $linkLabel.Location = New-Object System.Drawing.Point(20, 485)
     $linkLabel.Size = New-Object System.Drawing.Size(610, 25)
-    $linkLabel.Text = "Nao tem conta? Clique aqui para criar registo no Centro de Descargas da DGT"
+    $linkLabel.Text = "Não tem conta? Clique aqui para criar registo no Centro de Descargas da DGT"
     $linkLabel.Font = New-Object System.Drawing.Font("Segoe UI", 10, [System.Drawing.FontStyle]::Italic)
     $linkLabel.LinkColor = [System.Drawing.Color]::Blue
     $linkLabel.ActiveLinkColor = [System.Drawing.Color]::Red
@@ -240,8 +238,8 @@ IMPORTANTE:
     $btnOK.Add_Click({
         if ([string]::IsNullOrWhiteSpace($txtUsername.Text) -or [string]::IsNullOrWhiteSpace($txtPassword.Text)) {
             [System.Windows.Forms.MessageBox]::Show(
-                "Por favor, preencha o username (email) e password.`n`nSem credenciais nao e possivel descarregar dados da DGT.",
-                "Campos Obrigatorios",
+                "Por favor, preencha o username (email) e password.`n`nSem credenciais não é possível descarregar dados da DGT.",
+                "Campos Obrigatórios",
                 [System.Windows.Forms.MessageBoxButtons]::OK,
                 [System.Windows.Forms.MessageBoxIcon]::Warning
             )
