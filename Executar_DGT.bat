@@ -21,6 +21,59 @@ set "FIRST_RUN=0"
 if not exist "dgt_venv\" (
     set "FIRST_RUN=1"
     
+    REM Verificar se Python está instalado
+    echo [VERIFICACAO] A verificar instalacao do Python...
+    python --version >nul 2>&1
+    
+    if errorlevel 1 (
+        echo [ERRO] Python nao encontrado no sistema!
+        echo.
+        
+        REM Mostrar janela de aviso sobre Python
+        powershell -ExecutionPolicy Bypass -File "config\setup_inicial.ps1" Show-PythonNotFoundDialog
+        
+        REM Se o utilizador quiser continuar para instalar, reavaliar
+        python --version >nul 2>&1
+        if errorlevel 1 (
+            echo [INFO] Instalacao cancelada - Python nao encontrado.
+            echo Por favor, instale Python 3.8+ e execute novamente.
+            pause
+            exit /b 1
+        )
+    )
+    
+    REM Validar versão do Python (mínimo 3.8)
+    echo [VERIFICACAO] A verificar versao do Python...
+    for /f "tokens=2" %%i in ('python --version 2^>^&1') do set PYTHON_VERSION=%%i
+    
+    REM Extrair versão major.minor
+    for /f "tokens=1,2 delims=." %%a in ("%PYTHON_VERSION%") do (
+        set PYTHON_MAJOR=%%a
+        set PYTHON_MINOR=%%b
+    )
+    
+    REM Verificar se é Python 3.8 ou superior
+    if %PYTHON_MAJOR% LSS 3 (
+        echo [ERRO] Python %PYTHON_VERSION% e muito antigo!
+        echo [INFO] E necessario Python 3.8 ou superior.
+        powershell -ExecutionPolicy Bypass -File "config\setup_inicial.ps1" Show-PythonVersionDialog "%PYTHON_VERSION%"
+        pause
+        exit /b 1
+    )
+    
+    if %PYTHON_MAJOR% EQU 3 (
+        if %PYTHON_MINOR% LSS 8 (
+            echo [ERRO] Python %PYTHON_VERSION% e muito antigo!
+            echo [INFO] E necessario Python 3.8 ou superior.
+            powershell -ExecutionPolicy Bypass -File "config\setup_inicial.ps1" Show-PythonVersionDialog "%PYTHON_VERSION%"
+            pause
+            exit /b 1
+        )
+    )
+    
+    echo [OK] Python %PYTHON_VERSION% detectado
+    echo.
+    
     echo [PRIMEIRA EXECUCAO] Detectada!
     echo [INFO] Iniciando assistente de configuracao...
     echo.

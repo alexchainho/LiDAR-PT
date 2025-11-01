@@ -6,6 +6,296 @@
 Add-Type -AssemblyName System.Windows.Forms
 Add-Type -AssemblyName System.Drawing
 
+# Função para mostrar aviso de Python não encontrado
+function Show-PythonNotFoundDialog {
+    $form = New-Object System.Windows.Forms.Form
+    $form.Text = "Python Nao Encontrado"
+    $form.Size = New-Object System.Drawing.Size(700, 680)
+    $form.StartPosition = "CenterScreen"
+    $form.FormBorderStyle = "FixedDialog"
+    $form.MaximizeBox = $false
+    $form.MinimizeBox = $false
+    
+    # Ícone de aviso (símbolo ⚠)
+    $iconLabel = New-Object System.Windows.Forms.Label
+    $iconLabel.Location = New-Object System.Drawing.Point(20, 20)
+    $iconLabel.Size = New-Object System.Drawing.Size(60, 60)
+    $iconLabel.Text = "⚠"
+    $iconLabel.Font = New-Object System.Drawing.Font("Segoe UI", 36, [System.Drawing.FontStyle]::Bold)
+    $iconLabel.ForeColor = [System.Drawing.Color]::Orange
+    $iconLabel.TextAlign = [System.Drawing.ContentAlignment]::MiddleCenter
+    $form.Controls.Add($iconLabel)
+    
+    # Título
+    $title = New-Object System.Windows.Forms.Label
+    $title.Location = New-Object System.Drawing.Point(90, 30)
+    $title.Size = New-Object System.Drawing.Size(580, 40)
+    $title.Text = "Python Nao Encontrado no Sistema"
+    $title.Font = New-Object System.Drawing.Font("Segoe UI", 14, [System.Drawing.FontStyle]::Bold)
+    $title.ForeColor = [System.Drawing.Color]::DarkRed
+    $form.Controls.Add($title)
+    
+    # Descrição
+    $description = New-Object System.Windows.Forms.TextBox
+    $description.Location = New-Object System.Drawing.Point(20, 90)
+    $description.Size = New-Object System.Drawing.Size(660, 470)
+    $description.Multiline = $true
+    $description.ReadOnly = $true
+    $description.ScrollBars = "Vertical"
+    $description.Font = New-Object System.Drawing.Font("Consolas", 9)
+    $description.BackColor = [System.Drawing.Color]::LightYellow
+    $description.Text = @"
+===============================================================================
+                    PYTHON NAO ENCONTRADO
+===============================================================================
+
+O DGT Rasters requer Python 3.8 ou superior para funcionar.
+
+Python nao foi encontrado no PATH do sistema, o que significa que:
+  * Python nao esta instalado, OU
+  * Python esta instalado mas nao foi adicionado ao PATH durante instalacao
+
+-------------------------------------------------------------------------------
+O QUE E PYTHON?
+-------------------------------------------------------------------------------
+Python e uma linguagem de programacao necessaria para executar esta aplicacao.
+E gratuito, open-source e amplamente utilizado em ciencia de dados e GIS.
+
+-------------------------------------------------------------------------------
+COMO INSTALAR PYTHON:
+-------------------------------------------------------------------------------
+
+PASSO 1: DOWNLOAD
+  • Aceda a: https://www.python.org/downloads/
+  • Clique em Download Python 3.12.x (ou versao mais recente)
+  • Aguarde download do instalador (aproximadamente 25 MB)
+
+PASSO 2: INSTALACAO
+  • Execute o ficheiro descarregado (python-3.12.x.exe)
+  
+  ** IMPORTANTE **
+  
+  ┌────────────────────────────────────────────────────────────────┐
+  │                                                                │
+  │  ☑ MARQUE a opcao: "Add Python to PATH"                       │
+  │                                                                │
+  │  Esta opcao e OBRIGATORIA para que o Windows encontre Python! │
+  │                                                                │
+  └────────────────────────────────────────────────────────────────┘
+  
+  • Clique em "Install Now" (Instalacao Standard)
+  • Aguarde conclusao (2-5 minutos)
+  • Clique em "Close" ao finalizar
+
+PASSO 3: VERIFICACAO
+  • Feche TODAS as janelas de terminal abertas
+  • Abra um NOVO terminal (CMD ou PowerShell)
+  • Digite: python --version
+  • Deve aparecer: Python 3.12.x (ou superior)
+
+PASSO 4: EXECUTAR DGT RASTERS
+  • Execute novamente Executar_DGT.bat
+  • A instalacao continuara automaticamente
+
+-------------------------------------------------------------------------------
+REQUISITOS MINIMOS:
+-------------------------------------------------------------------------------
+  * Python 3.8 ou superior (recomendado: 3.12+)
+  * Sistema Operativo: Windows 10/11
+  * Espaco em disco: ~200 MB para Python + 1 GB para bibliotecas
+
+-------------------------------------------------------------------------------
+JA TENHO PYTHON INSTALADO?
+-------------------------------------------------------------------------------
+Se instalou Python mas nao marcou "Add to PATH":
+
+  SOLUCAO 1 - Reinstalar (Recomendado):
+    • Desinstale Python atual (Painel de Controlo > Programas)
+    • Reinstale seguindo passos acima (marcar "Add to PATH")
+  
+  SOLUCAO 2 - Adicionar PATH manualmente (Avancado):
+    • Painel de Controlo > Sistema > Configuracoes Avancadas
+    • Variaveis de Ambiente > PATH > Editar
+    • Adicionar: C:\Users\SeuUser\AppData\Local\Programs\Python\Python312
+    • Adicionar: C:\Users\SeuUser\AppData\Local\Programs\Python\Python312\Scripts
+
+===============================================================================
+
+Clique em 'Abrir Site Python' para descarregar o instalador.
+Apos instalar, execute novamente Executar_DGT.bat
+
+"@
+    $form.Controls.Add($description)
+    
+    # Botão para abrir site
+    $btnDownload = New-Object System.Windows.Forms.Button
+    $btnDownload.Location = New-Object System.Drawing.Point(340, 580)
+    $btnDownload.Size = New-Object System.Drawing.Size(180, 40)
+    $btnDownload.Text = "Abrir Site Python"
+    $btnDownload.Font = New-Object System.Drawing.Font("Segoe UI", 11, [System.Drawing.FontStyle]::Bold)
+    $btnDownload.BackColor = [System.Drawing.Color]::LightBlue
+    $btnDownload.FlatStyle = "Flat"
+    $btnDownload.Add_Click({
+        Start-Process "https://www.python.org/downloads/"
+    })
+    $form.Controls.Add($btnDownload)
+    
+    # Botão Fechar
+    $btnClose = New-Object System.Windows.Forms.Button
+    $btnClose.Location = New-Object System.Drawing.Point(540, 580)
+    $btnClose.Size = New-Object System.Drawing.Size(140, 40)
+    $btnClose.Text = "Fechar"
+    $btnClose.Font = New-Object System.Drawing.Font("Segoe UI", 11)
+    $btnClose.FlatStyle = "Flat"
+    $btnClose.DialogResult = [System.Windows.Forms.DialogResult]::Cancel
+    $form.Controls.Add($btnClose)
+    
+    $form.CancelButton = $btnClose
+    
+    $result = $form.ShowDialog()
+    return $result
+}
+
+# Função para mostrar aviso de versão Python antiga
+function Show-PythonVersionDialog {
+    param(
+        [string]$CurrentVersion
+    )
+    
+    $form = New-Object System.Windows.Forms.Form
+    $form.Text = "Versao Python Desatualizada"
+    $form.Size = New-Object System.Drawing.Size(700, 580)
+    $form.StartPosition = "CenterScreen"
+    $form.FormBorderStyle = "FixedDialog"
+    $form.MaximizeBox = $false
+    $form.MinimizeBox = $false
+    
+    # Ícone de aviso
+    $iconLabel = New-Object System.Windows.Forms.Label
+    $iconLabel.Location = New-Object System.Drawing.Point(20, 20)
+    $iconLabel.Size = New-Object System.Drawing.Size(60, 60)
+    $iconLabel.Text = "⚠"
+    $iconLabel.Font = New-Object System.Drawing.Font("Segoe UI", 36, [System.Drawing.FontStyle]::Bold)
+    $iconLabel.ForeColor = [System.Drawing.Color]::Orange
+    $iconLabel.TextAlign = [System.Drawing.ContentAlignment]::MiddleCenter
+    $form.Controls.Add($iconLabel)
+    
+    # Título
+    $title = New-Object System.Windows.Forms.Label
+    $title.Location = New-Object System.Drawing.Point(90, 30)
+    $title.Size = New-Object System.Drawing.Size(580, 40)
+    $title.Text = "Versao Python Desatualizada"
+    $title.Font = New-Object System.Drawing.Font("Segoe UI", 14, [System.Drawing.FontStyle]::Bold)
+    $title.ForeColor = [System.Drawing.Color]::DarkOrange
+    $form.Controls.Add($title)
+    
+    # Descrição
+    $description = New-Object System.Windows.Forms.TextBox
+    $description.Location = New-Object System.Drawing.Point(20, 90)
+    $description.Size = New-Object System.Drawing.Size(660, 380)
+    $description.Multiline = $true
+    $description.ReadOnly = $true
+    $description.ScrollBars = "Vertical"
+    $description.Font = New-Object System.Drawing.Font("Consolas", 9)
+    $description.BackColor = [System.Drawing.Color]::LightYellow
+    $description.Text = @"
+===============================================================================
+              VERSAO PYTHON DESATUALIZADA DETECTADA
+===============================================================================
+
+VERSAO ATUAL:    Python $CurrentVersion
+VERSAO MINIMA:   Python 3.8
+VERSAO RECOMENDADA: Python 3.12+
+
+-------------------------------------------------------------------------------
+PROBLEMA:
+-------------------------------------------------------------------------------
+A versao Python instalada no sistema ($CurrentVersion) e muito antiga e 
+nao e compativel com as bibliotecas modernas necessarias para o DGT Rasters.
+
+Bibliotecas como GeoPandas, Rasterio e NumPy requerem Python 3.8 ou superior.
+
+-------------------------------------------------------------------------------
+SOLUCAO: ATUALIZAR PYTHON
+-------------------------------------------------------------------------------
+
+OPCAO 1 - INSTALACAO LADO-A-LADO (Recomendado):
+  
+  1. Mantenha a versao atual (nao desinstalar)
+  2. Instale nova versao Python 3.12+ em paralelo
+  3. Durante instalacao, marque:
+     ☑ Add Python to PATH
+     ☑ Install for all users (opcional)
+  
+  4. A nova versao sera usada por padrao
+
+OPCAO 2 - DESINSTALAR E REINSTALAR:
+  
+  1. Painel de Controlo > Programas > Desinstalar Python $CurrentVersion
+  2. Aceda a: https://www.python.org/downloads/
+  3. Descarregue Python 3.12.x ou superior
+  4. Execute instalador com opcao "Add to PATH" marcada
+
+-------------------------------------------------------------------------------
+PASSOS PARA ATUALIZAR:
+-------------------------------------------------------------------------------
+
+1. DOWNLOAD:
+   • Aceda: https://www.python.org/downloads/
+   • Download Python 3.12.x (botao amarelo grande)
+
+2. INSTALACAO:
+   • Execute python-3.12.x.exe
+   • ☑ MARQUE: "Add Python to PATH"
+   • Clique: "Install Now"
+   • Aguarde 2-5 minutos
+
+3. VERIFICACAO:
+   • Feche todos os terminais abertos
+   • Abra NOVO terminal
+   • Digite: python --version
+   • Confirme: Python 3.12.x
+
+4. EXECUTAR DGT RASTERS:
+   • Execute novamente Executar_DGT.bat
+   • Instalacao continuara automaticamente
+
+===============================================================================
+
+Clique em 'Abrir Site Python' para descarregar versao atualizada.
+
+"@
+    $form.Controls.Add($description)
+    
+    # Botão para abrir site
+    $btnDownload = New-Object System.Windows.Forms.Button
+    $btnDownload.Location = New-Object System.Drawing.Point(340, 490)
+    $btnDownload.Size = New-Object System.Drawing.Size(180, 40)
+    $btnDownload.Text = "Abrir Site Python"
+    $btnDownload.Font = New-Object System.Drawing.Font("Segoe UI", 11, [System.Drawing.FontStyle]::Bold)
+    $btnDownload.BackColor = [System.Drawing.Color]::LightBlue
+    $btnDownload.FlatStyle = "Flat"
+    $btnDownload.Add_Click({
+        Start-Process "https://www.python.org/downloads/"
+    })
+    $form.Controls.Add($btnDownload)
+    
+    # Botão Fechar
+    $btnClose = New-Object System.Windows.Forms.Button
+    $btnClose.Location = New-Object System.Drawing.Point(540, 490)
+    $btnClose.Size = New-Object System.Drawing.Size(140, 40)
+    $btnClose.Text = "Fechar"
+    $btnClose.Font = New-Object System.Drawing.Font("Segoe UI", 11)
+    $btnClose.FlatStyle = "Flat"
+    $btnClose.DialogResult = [System.Windows.Forms.DialogResult]::Cancel
+    $form.Controls.Add($btnClose)
+    
+    $form.CancelButton = $btnClose
+    
+    $result = $form.ShowDialog()
+    return $result
+}
+
 # Função para mostrar janela de boas-vindas
 function Show-WelcomeDialog {
     $form = New-Object System.Windows.Forms.Form
@@ -302,6 +592,17 @@ if ($MyInvocation.InvocationName -ne '.') {
             } else {
                 exit 1
             }
+        }
+        elseif ($functionName -eq 'Show-PythonNotFoundDialog') {
+            $result = Show-PythonNotFoundDialog
+            exit 0
+        }
+        elseif ($functionName -eq 'Show-PythonVersionDialog') {
+            if ($args.Count -gt 1) {
+                $version = $args[1]
+                $result = Show-PythonVersionDialog -CurrentVersion $version
+            }
+            exit 0
         }
     }
 }
