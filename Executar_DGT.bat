@@ -53,7 +53,10 @@ if not exist "dgt_venv\" (
     )
     
     REM Verificar se é Python 3.8 ou superior
-    if %PYTHON_MAJOR% LSS 3 (
+    if not defined PYTHON_MAJOR set PYTHON_MAJOR=0
+    if not defined PYTHON_MINOR set PYTHON_MINOR=0
+    
+    if "%PYTHON_MAJOR%" LSS "3" (
         echo [ERRO] Python %PYTHON_VERSION% e muito antigo!
         echo [INFO] E necessario Python 3.8 ou superior.
         powershell -ExecutionPolicy Bypass -File "config\setup_inicial.ps1" Show-PythonVersionDialog "%PYTHON_VERSION%"
@@ -61,8 +64,8 @@ if not exist "dgt_venv\" (
         exit /b 1
     )
     
-    if %PYTHON_MAJOR% EQU 3 (
-        if %PYTHON_MINOR% LSS 8 (
+    if "%PYTHON_MAJOR%" EQU "3" (
+        if "%PYTHON_MINOR%" LSS "8" (
             echo [ERRO] Python %PYTHON_VERSION% e muito antigo!
             echo [INFO] E necessario Python 3.8 ou superior.
             powershell -ExecutionPolicy Bypass -File "config\setup_inicial.ps1" Show-PythonVersionDialog "%PYTHON_VERSION%"
