@@ -102,8 +102,11 @@ Facilitar o acesso a dados de alta qualidade para profissionais de GIS, investig
 - Linux / macOS (compatível, não testado)
 
 ### Python
-- **Python 3.8 ou superior**
+- **Python 3.8 ou superior** (qualquer versão: 3.8, 3.9, 3.10, 3.11, 3.12, 3.13)
 - Virtual environment (criado automaticamente)
+
+> **⚠️ Python 3.12.8 ou outra versão não detetado?**  
+> Veja a secção [Resolução de Problemas - Python](#-resolução-de-problemas---python) abaixo.
 
 ### Credenciais DGT
 - Conta no [Centro de Descargas de Dados](https://cdd.dgterritorio.gov.pt)
@@ -419,6 +422,8 @@ Se cancelar em qualquer janela popup:
 3. Reinicie o terminal/computador
 4. Execute `Executar_DGT.bat` novamente
 
+**Ver mais detalhes:** [Resolução de Problemas - Python](#-resolução-de-problemas---python)
+
 </details>
 
 <details>
@@ -470,6 +475,181 @@ Dividido em:
 **Nota:** Execuções seguintes são instantâneas (2-5 segundos).
 
 </details>
+
+---
+
+## 🔧 Resolução de Problemas - Python
+
+### ⚠️ "Python não encontrado" mas tenho Python 3.12.8 (ou outra versão) instalado
+
+Este é um problema **muito comum** que ocorre quando Python está instalado mas não é detetado pelo sistema.
+
+#### 🎯 Ferramenta de Diagnóstico
+
+Execute o script de teste incluído no projeto:
+
+```cmd
+testar_python.bat
+```
+
+Este script irá:
+- ✅ Verificar se Python é detetado
+- ✅ Mostrar a versão instalada
+- ✅ Verificar se Python está no PATH do sistema
+- ✅ Identificar automaticamente o problema
+
+#### 🔍 Causas Comuns e Soluções
+
+<details>
+<summary><b>1️⃣ Terminal Antigo (MAIS COMUM - 80% dos casos)</b></summary>
+
+**Problema:**  
+Instalou Python mas está a usar o **mesmo terminal** que estava aberto antes da instalação.
+
+**Por que acontece:**  
+O Windows carrega as variáveis de ambiente (incluindo PATH) apenas quando o terminal é aberto. Se instalar Python num terminal já aberto, esse terminal não "vê" o novo Python.
+
+**✅ SOLUÇÃO (Simples):**
+1. **FECHE COMPLETAMENTE** todos os terminais/PowerShell/CMD abertos
+2. **Abra um NOVO terminal** (tecla Windows → `cmd` → Enter)
+3. Execute novamente `Executar_DGT.bat`
+4. Python deverá ser detetado agora
+
+**Resultado esperado:**
+```
+[VERIFICACAO] A verificar instalacao do Python...
+[OK] Python 3.12.8 detectado
+```
+
+</details>
+
+<details>
+<summary><b>2️⃣ Python não está no PATH</b></summary>
+
+**Problema:**  
+Durante a instalação de Python, **não marcou** a opção `Add Python to PATH`.
+
+**Verificação:**
+```cmd
+where python
+```
+Se mostrar erro "não foi possível encontrar", Python não está no PATH.
+
+**✅ SOLUÇÃO A - Reinstalar (Recomendado):**
+1. Painel de Controlo → Programas → Desinstalar Python
+2. Descarregar novamente de [python.org/downloads](https://www.python.org/downloads/)
+3. Durante instalação, **MARCAR OBRIGATORIAMENTE**: ☑ `Add Python to PATH`
+4. Concluir instalação
+5. **Fechar todos os terminais**
+6. Abrir novo terminal e executar `Executar_DGT.bat`
+
+**✅ SOLUÇÃO B - Adicionar PATH Manualmente (Avançado):**
+1. Localizar pasta de instalação Python (normalmente):
+   - `C:\Users\<Usuario>\AppData\Local\Programs\Python\Python312`
+   - `C:\Python312`
+2. Painel de Controlo → Sistema → Configurações avançadas do sistema
+3. Botão "Variáveis de Ambiente"
+4. Em "Variáveis do sistema", selecionar `Path` → Editar
+5. Adicionar **dois** novos caminhos:
+   - Pasta Python: `C:\Python312` (ajustar conforme sua versão)
+   - Pasta Scripts: `C:\Python312\Scripts`
+6. Clicar OK em todas as janelas
+7. **REINICIAR todos os terminais**
+8. Testar: `python --version`
+
+</details>
+
+<details>
+<summary><b>3️⃣ Python instalado via Microsoft Store</b></summary>
+
+**Problema:**  
+Python da Microsoft Store pode ter conflitos ou não ser detetado corretamente.
+
+**✅ SOLUÇÃO:**
+1. Desinstalar Python da Microsoft Store:
+   - Configurações → Aplicações → Python → Desinstalar
+2. Instalar versão oficial:
+   - [python.org/downloads](https://www.python.org/downloads/)
+   - **Marcar**: ☑ `Add Python to PATH`
+3. Reiniciar terminal
+4. Executar `Executar_DGT.bat`
+
+</details>
+
+<details>
+<summary><b>4️⃣ Múltiplas versões Python instaladas</b></summary>
+
+**Problema:**  
+Tem várias versões Python e o sistema usa a versão errada.
+
+**Verificação:**
+```cmd
+where python
+```
+Se mostrar múltiplos caminhos, há várias versões.
+
+**✅ SOLUÇÃO:**
+1. Decidir qual versão manter (recomendado: mais recente ≥ 3.8)
+2. Desinstalar versões antigas não necessárias
+3. Ou ajustar PATH para priorizar versão desejada (avançado)
+4. Testar: `python --version`
+
+</details>
+
+<details>
+<summary><b>5️⃣ Permissões ou Antivírus</b></summary>
+
+**Problema:**  
+Antivírus ou falta de permissões bloqueia execução de Python.
+
+**✅ SOLUÇÃO:**
+1. Executar `Executar_DGT.bat` como **Administrador**:
+   - Botão direito → "Executar como administrador"
+2. Se ainda falhar, desativar temporariamente antivírus
+3. Adicionar pasta do projeto às exceções do antivírus
+
+</details>
+
+#### 📋 Checklist de Verificação
+
+Execute este checklist para garantir que Python está corretamente configurado:
+
+```cmd
+REM 1. Testar comando python
+python --version
+
+REM 2. Verificar localização
+where python
+
+REM 3. Testar execução de código
+python -c "print('Python OK')"
+
+REM 4. Verificar pip
+pip --version
+```
+
+**Todos os comandos devem funcionar sem erros.**
+
+#### 📚 Documentação Completa
+
+Para mais detalhes, consulte o ficheiro:
+- **[TROUBLESHOOTING_PYTHON.md](TROUBLESHOOTING_PYTHON.md)** - Guia completo de resolução de problemas
+
+#### ✅ Versões Compatíveis
+
+O DGT Rasters aceita **qualquer versão Python 3.8 ou superior**:
+
+| Versão | Status |
+|--------|--------|
+| Python 3.7 ou inferior | ❌ Não suportado |
+| Python 3.8.x | ✅ Compatível |
+| Python 3.9.x | ✅ Compatível |
+| Python 3.10.x | ✅ Compatível |
+| Python 3.11.x | ✅ Compatível |
+| **Python 3.12.x** | ✅ **Compatível** (incluindo 3.12.8) |
+| Python 3.13.x | ✅ Compatível (recomendado) |
+
+**Nota:** As mensagens do instalador mencionam Python 3.13 como **recomendado**, mas **não é obrigatório**. Qualquer versão ≥ 3.8 funciona perfeitamente.
 
 ---
 

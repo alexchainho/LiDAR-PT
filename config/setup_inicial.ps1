@@ -76,25 +76,28 @@ O DGT Rasters utiliza Python para:
 Sem Python, a aplicação NÃO pode funcionar.
 
 -------------------------------------------------------------------------------
-COMO INSTALAR PYTHON 3.13:
+COMO INSTALAR PYTHON:
 -------------------------------------------------------------------------------
 
+VERSÕES COMPATÍVEIS: Python 3.8, 3.9, 3.10, 3.11, 3.12 ou 3.13
+RECOMENDADO: Python 3.12 ou 3.13 (mais recentes)
+
 PASSO 1: DOWNLOAD
-  • Clique no botão "Descarregar Python 3.13" abaixo
-  • Será redirecionado para: https://www.python.org/downloads/release/python-3139/
-  • percorra para baixo até encontrar "Windows installer (64-bit)"
+  • Clique no botão "Descarregar Python" abaixo
+  • Será redirecionado para: https://www.python.org/downloads/
+  • Clique no botão amarelo "Download Python 3.x"
   • Aguarde download do instalador (aproximadamente 25 MB)
 
 PASSO 2: INSTALAÇÃO
-  • Execute o ficheiro descarregado (python-3.13.x.exe)
+  • Execute o ficheiro descarregado (python-3.x.x.exe)
   
   ** MUITO IMPORTANTE **
   
   ┌────────────────────────────────────────────────────────────────┐
   │                                                                │
-  │  ☑ MARQUE a opção: "Add Python 3.13 to PATH"                  │
+  │  ☑ MARQUE a opção: "Add Python to PATH"                       │
   │                                                                │
-  │  Esta opção é OBRIGATÓRIA para que o Windows encontre Python!  │
+  │  Esta opção é OBRIGATÓRIA para que o Windows encontre Python! │
   │                                                                │
   └────────────────────────────────────────────────────────────────┘
   
@@ -103,42 +106,45 @@ PASSO 2: INSTALAÇÃO
   • Clique em "Close" ao finalizar
 
 PASSO 3: VERIFICAÇÃO
-  • Feche TODAS as janelas de terminal abertas
+  • Feche TODAS as janelas de terminal/PowerShell abertas
   • Abra um NOVO terminal (CMD ou PowerShell)
   • Digite: python --version
-  • Deve aparecer: Python 3.13.x (ou superior)
+  • Deve aparecer: Python 3.x.x
 
 PASSO 4: EXECUTAR DGT RASTERS
+  • FECHE ESTE TERMINAL completamente
   • Execute novamente Executar_DGT.bat
   • A instalação continuará automaticamente
 
 -------------------------------------------------------------------------------
-REQUISITOS MÍNIMOS:
+JÁ TENHO PYTHON INSTALADO MAS NÃO É DETETADO?
 -------------------------------------------------------------------------------
-  • Python 3.8 ou superior (recomendado: 3.13+)
-  • Sistema Operativo: Windows 10/11
-  • Espaço em disco: ~200 MB para Python + 1 GB para bibliotecas
+Se instalou Python mas este script não o deteta:
 
--------------------------------------------------------------------------------
-JÁ TENHO PYTHON INSTALADO?
--------------------------------------------------------------------------------
-Se instalou Python mas não marcou "Add to PATH":
+  SOLUÇÃO 1 - Abrir novo terminal (Mais Comum):
+    • FECHE COMPLETAMENTE este terminal/PowerShell
+    • Abra um NOVO terminal
+    • Execute novamente Executar_DGT.bat
+    • O Python deverá ser detetado
 
-  SOLUÇÃO 1 - Reinstalar (Recomendado):
+  SOLUÇÃO 2 - Reinstalar com PATH (Recomendado):
     • Desinstale Python atual (Painel de Controlo > Programas)
     • Reinstale seguindo passos acima (marcar "Add to PATH")
   
-  SOLUÇÃO 2 - Adicionar PATH manualmente (Avançado):
+  SOLUÇÃO 3 - Adicionar PATH manualmente (Avançado):
     • Painel de Controlo > Sistema > Configurações Avançadas
     • Variáveis de Ambiente > PATH > Editar
-    • Adicionar: C:\Users\SeuUser\AppData\Local\Programs\Python\Python313
-    • Adicionar: C:\Users\SeuUser\AppData\Local\Programs\Python\Python313\Scripts
+    • Adicionar caminho da pasta Python (ex: C:\Python312)
+    • Adicionar caminho da pasta Scripts (ex: C:\Python312\Scripts)
+    • REINICIAR todos os terminais após esta alteração
 
 ===============================================================================
 
-Clique em 'Descarregar Python 3.13' para abrir a página de download.
-Após instalar, execute novamente Executar_DGT.bat
+Clique em 'Descarregar Python' para abrir a página de download.
+Após instalar, FECHE ESTE TERMINAL e execute novamente Executar_DGT.bat
 
+"@
+    $form.Controls.Add($description)
 "@
     $form.Controls.Add($description)
     
@@ -146,7 +152,7 @@ Após instalar, execute novamente Executar_DGT.bat
     $btnDownload = New-Object System.Windows.Forms.Button
     $btnDownload.Location = New-Object System.Drawing.Point(300, 580)
     $btnDownload.Size = New-Object System.Drawing.Size(220, 40)
-    $btnDownload.Text = "Descarregar Python 3.13"
+    $btnDownload.Text = "Descarregar Python"
     $btnDownload.Font = New-Object System.Drawing.Font("Segoe UI", 11, [System.Drawing.FontStyle]::Bold)
     $btnDownload.BackColor = [System.Drawing.Color]::LightGreen
     $btnDownload.FlatStyle = "Flat"
@@ -220,7 +226,7 @@ function Show-PythonVersionDialog {
 
 VERSÃO ATUAL:        Python $CurrentVersion
 VERSÃO MÍNIMA:       Python 3.8
-VERSÃO RECOMENDADA:  Python 3.13+
+VERSÃO RECOMENDADA:  Python 3.12 ou 3.13
 
 -------------------------------------------------------------------------------
 PROBLEMA:
@@ -237,9 +243,9 @@ SOLUÇÃO: ATUALIZAR PYTHON
 OPÇÃO 1 - INSTALAÇÃO LADO-A-LADO (Recomendado):
   
   1. Mantenha a versão atual (não desinstalar)
-  2. Instale nova versão Python 3.13+ em paralelo
+  2. Instale nova versão Python 3.12 ou 3.13 em paralelo
   3. Durante instalação, marque:
-     ☑ Add Python 3.13 to PATH
+     ☑ Add Python to PATH
      ☑ Install for all users (opcional)
   
   4. A nova versão será usada por padrão
@@ -248,7 +254,7 @@ OPÇÃO 2 - DESINSTALAR E REINSTALAR:
   
   1. Painel de Controlo > Programas > Desinstalar Python $CurrentVersion
   2. Aceda a: https://www.python.org/downloads/
-  3. Descarregue Python 3.13.x ou superior
+  3. Descarregue Python 3.12 ou 3.13
   4. Execute instalador com opção "Add to PATH" marcada
 
 -------------------------------------------------------------------------------
@@ -256,12 +262,32 @@ PASSOS PARA ATUALIZAR:
 -------------------------------------------------------------------------------
 
 1. DOWNLOAD:
-   • Clique no botão "Descarregar Python 3.13" abaixo
+   • Clique no botão "Descarregar Python" abaixo
    • Será redirecionado para: https://www.python.org/downloads/
-   • Download Python 3.13.x (botão amarelo grande)
+   • Download Python 3.12 ou 3.13 (botão amarelo)
 
 2. INSTALAÇÃO:
-   • Execute python-3.13.x.exe
+   • Execute python-3.x.x.exe
+   • ☑ MARQUE: "Add Python to PATH"
+   • Clique: "Install Now"
+   • Aguarde 2-5 minutos
+
+3. VERIFICAÇÃO:
+   • Feche todos os terminais abertos
+   • Abra NOVO terminal
+   • Digite: python --version
+   • Confirme: Python 3.12.x ou 3.13.x
+
+4. EXECUTAR DGT RASTERS:
+   • Execute novamente Executar_DGT.bat
+   • Instalação continuará automaticamente
+
+===============================================================================
+
+Clique em 'Descarregar Python' para obter a versão atualizada.
+
+"@
+    $form.Controls.Add($description)
    • ☑ MARQUE: "Add Python 3.13 to PATH"
    • Clique: "Install Now"
    • Aguarde 2-5 minutos
@@ -287,7 +313,7 @@ Clique em 'Descarregar Python 3.13' para obter a versão atualizada.
     $btnDownload = New-Object System.Windows.Forms.Button
     $btnDownload.Location = New-Object System.Drawing.Point(300, 490)
     $btnDownload.Size = New-Object System.Drawing.Size(220, 40)
-    $btnDownload.Text = "Descarregar Python 3.13"
+    $btnDownload.Text = "Descarregar Python"
     $btnDownload.Font = New-Object System.Drawing.Font("Segoe UI", 11, [System.Drawing.FontStyle]::Bold)
     $btnDownload.BackColor = [System.Drawing.Color]::LightGreen
     $btnDownload.FlatStyle = "Flat"
